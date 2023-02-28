@@ -1,4 +1,3 @@
-import generateJoke from "./functions/generateJoke";
 import "./styles/main.scss";
 import unga from "./assets/unga.jpg";
 import {

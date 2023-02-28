@@ -72,7 +72,8 @@ function createTaskCardModal(
   inputStartDate.id = "start-date";
   inputStartDate.className = "input-form";
   inputStartDate.setAttribute("type", "date");
-  inputStartDate.name = "start-date";
+  inputStartDate.name = "startDate";
+  inputStartDate.value = sDate;
 
   let labelDueDate = document.createElement("label");
   labelDueDate.className = "form-input-label";
@@ -82,7 +83,8 @@ function createTaskCardModal(
   inputDueDate.id = "due-date";
   inputDueDate.className = "input-form";
   inputDueDate.setAttribute("type", "date");
-  inputDueDate.name = "due-date";
+  inputDueDate.name = "dueDate";
+  inputDueDate.value = dDate;
 
   let labelPriority = document.createElement("label");
   labelPriority.className = "form-input-label";
@@ -222,6 +224,7 @@ function addTaskListener(e, indexofProject) {
   let arrayOfProjects = JSON.parse(localStorage.getItem("projects"));
   const formData = new FormData(e.target);
   const obj = Object.fromEntries(formData);
+  console.log(obj);
   const newTask = new Task(
     obj.name,
     obj.description,
