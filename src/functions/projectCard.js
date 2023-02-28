@@ -1,4 +1,4 @@
-import  { addTaskModal, createTaskCardModal, editTaskModal } from "./taskModal";
+import { addTaskModal, editProjectModal, editTaskModal } from "./modalListeners";
 
 function dropdownHideAll() {
   let dropdowns = document.getElementsByClassName("dropdown-content");
@@ -12,7 +12,7 @@ window.onclick = function (event) {
   }
 };
 
-function myFunction(dropdownContent) {
+function dropdownDisplay(dropdownContent) {
   dropdownHideAll();
   let xStyle = getComputedStyle(dropdownContent);
   let x = dropdownContent;
@@ -63,7 +63,7 @@ function createTaskCard(name, desc, sDate, dDate, prio, completed, taskIndex, pr
   return taskCard;
 }
 
-function createProjectDropdown() {
+function createProjectDropdown(projectIndex) {
   let projectCardDropdown = document.createElement("div");
   projectCardDropdown.className = "dropdown";
 
@@ -80,7 +80,11 @@ function createProjectDropdown() {
   projectCardDropdownContent.className = "dropdown-content";
 
   let projectCardDropdownLinks = document.createElement("a");
-  projectCardDropdownLinks.innerHTML = "Link 1";
+  projectCardDropdownLinks.innerHTML = "Rename";
+  projectCardDropdownLinks.addEventListener("click", () =>{
+    editProjectModal(projectIndex);
+    document.getElementById("id01").style.display = "block";
+  });
 
   projectCardDropdownContent.appendChild(projectCardDropdownLinks);
   projectCardDropdownHousing.appendChild(projectCardDropdownButton);
@@ -89,11 +93,13 @@ function createProjectDropdown() {
   projectCardDropdown.appendChild(projectCardDropdownHousing);
 
   projectCardDropdownButton.addEventListener("click", () =>
-    myFunction(projectCardDropdownContent)
+  dropdownDisplay(projectCardDropdownContent)
   );
 
   return projectCardDropdown;
 }
+
+
 
 function createProjectCard(projectTitle, projectIndex) {
   let projectCard = document.createElement("div");
@@ -119,7 +125,7 @@ function createProjectCard(projectTitle, projectIndex) {
   projectTaskContainer.id = "project1";
 
   projectCardHeader.appendChild(projectCardTitle);
-  projectCardHeader.appendChild(createProjectDropdown());
+  projectCardHeader.appendChild(createProjectDropdown(projectIndex));
   projectCardHeader.appendChild(projectCardAddButton);
   projectCard.appendChild(projectCardHeader);
 
@@ -145,4 +151,70 @@ function createProjectCard(projectTitle, projectIndex) {
   return projectCard;
 }
 
-export { createProjectCard, createTaskCard };
+function renameProjectModal() {
+  let modal = document.createElement("div");
+  modal.id = "id01";
+  modal.className = "modal";
+  let modalcontent = document.createElement("div");
+  modalcontent.className = "modal-content";
+  let closebuttoncontainer = document.createElement("header");
+  closebuttoncontainer.className = "w3-container w3-teal";
+  let closebutton = document.createElement("span");
+  closebutton.className = "close-x-button";
+  closebutton.innerHTML = "&times;";
+  closebutton.addEventListener("click", () => {
+    modal.remove();
+  });
+  let modaltitleheader = document.createElement("h2");
+  modaltitleheader.id = "modal-title";
+  modaltitleheader.innerHTML = "Rename Project";
+
+  let taskForm = document.createElement("form");
+  taskForm.className = "task-form";
+  let inputDiv = document.createElement("div");
+  inputDiv.className = "form-input";
+
+  let labelTitle = document.createElement("label");
+  labelTitle.className = "form-input-label";
+  labelTitle.setAttribute("for", "title");
+  labelTitle.innerHTML = "Project Title:";
+  let textareaTitle = document.createElement("textarea");
+  textareaTitle.id = "title";
+  textareaTitle.className = "input-form";
+  textareaTitle.name = "name";
+  textareaTitle.innerHTML = name;
+
+  let buttonDiv = document.createElement("div");
+  buttonDiv.className = "button-div";
+  let submitButton = document.createElement("button");
+  submitButton.type = "submit";
+  submitButton.id = "task-form-submit";
+  submitButton.className = "form-button";
+  submitButton.innerHTML = "Submit";
+  let cancelButton = document.createElement("button");
+  cancelButton.id = "task-form-cancel";
+  cancelButton.className = "form-button";
+  cancelButton.innerHTML = "Cancel";
+  cancelButton.addEventListener("click", () => {
+    modal.remove();
+  });
+
+  modal.appendChild(modalcontent);
+  modalcontent.appendChild(closebuttoncontainer);
+  closebuttoncontainer.appendChild(closebutton);
+  closebuttoncontainer.appendChild(modaltitleheader);
+  modalcontent.appendChild(taskForm);
+  taskForm.appendChild(inputDiv);
+  inputDiv.appendChild(labelTitle);
+  inputDiv.appendChild(textareaTitle);
+  inputDiv.appendChild(buttonDiv);
+  buttonDiv.appendChild(submitButton);
+  buttonDiv.appendChild(cancelButton);
+
+  document.getElementById("main-content-container").appendChild(modal);
+
+  return taskForm;
+}
+
+
+export { createProjectCard, createTaskCard, renameProjectModal };

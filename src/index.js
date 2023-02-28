@@ -3,9 +3,8 @@ import unga from "./assets/unga.jpg";
 import {
   createProjectCard,
   createTaskCard,
-  createTaskCardModal,
 } from "./functions/projectCard";
-import { Task, Project } from "./classes/task";
+import { Task, Project } from "./classes/project";
 
 const projectLayout = document.getElementById("project-layout");
 const addProjectButton = document.getElementById("add-project");

@@ -1,7 +1,3 @@
-import displayProjectWithTasks from "..";
-import { Project, Task } from "../classes/task";
-import { refreshProjectLayout, unserialize } from "./utilityFunctions";
-
 function createTaskCardModal(
   name,
   desc,
@@ -173,11 +169,6 @@ function createTaskCardModal(
   buttonDiv.appendChild(submitButton);
   buttonDiv.appendChild(cancelButton);
 
-  // taskForm.addEventListener("submit", (e) => {
-  //   addTaskListener(e, projectIndex);
-  //   refreshProjectLayout();
-  //   displayProjectWithTasks();
-  // });
   document.getElementById("main-content-container").appendChild(modal);
   console.log(taskForm.childNodes[0].childNodes[1]);
 
@@ -219,75 +210,4 @@ function selectedOptionPriority(
   }
 }
 
-function addTaskListener(e, indexofProject) {
-  e.preventDefault();
-  let arrayOfProjects = JSON.parse(localStorage.getItem("projects"));
-  const formData = new FormData(e.target);
-  const obj = Object.fromEntries(formData);
-  console.log(obj);
-  const newTask = new Task(
-    obj.name,
-    obj.description,
-    obj.startDate,
-    obj.dueDate,
-    obj.completed,
-    obj.priority
-  );
-  console.log(newTask);
-  console.log(JSON.parse(JSON.stringify(arrayOfProjects)));
-  arrayOfProjects.forEach((element, index) => {
-    arrayOfProjects[index] = unserialize(element, Project);
-  });
-  console.log(indexofProject);
-  arrayOfProjects[indexofProject].addTask(newTask);
-  console.log(JSON.parse(JSON.stringify(arrayOfProjects)));
-  localStorage.setItem("projects", JSON.stringify(arrayOfProjects));
-}
-
-//replace task at index on project task array
-
-function editTaskListener(e, indexofTask, projectIndex) {
-  e.preventDefault();
-  let arrayOfProjects = JSON.parse(localStorage.getItem("projects"));
-  const formData = new FormData(e.target);
-  const obj = Object.fromEntries(formData);
-  const newTask = new Task(
-    obj.name,
-    obj.description,
-    obj.startDate,
-    obj.dueDate,
-    obj.completed,
-    obj.priority
-  );
-  console.log(newTask);
-  console.log(JSON.parse(JSON.stringify(arrayOfProjects)));
-  arrayOfProjects.forEach((element, index) => {
-    arrayOfProjects[index] = unserialize(element, Project);
-  });
-  console.log(projectIndex);
-  let accessedProject = arrayOfProjects[projectIndex];
-  accessedProject.tasks[indexofTask] = newTask;
-  console.log(JSON.parse(JSON.stringify(arrayOfProjects)));
-  localStorage.setItem("projects", JSON.stringify(arrayOfProjects));
-}
-
-function addTaskModal(projectIndex) {
-  let taskForm = createTaskCardModal();
-  taskForm.addEventListener("submit", (e) => {
-    addTaskListener(e, projectIndex);
-    refreshProjectLayout();
-    displayProjectWithTasks();
-  });
-}
-
-function editTaskModal(name, desc, sDate, dDate, prio, completed, taskIndex, projectIndex) {
-  let taskForm = createTaskCardModal(name, desc, sDate, dDate, prio, completed, taskIndex, projectIndex);
-  taskForm.addEventListener("submit", (e) =>{
-    editTaskListener(e, taskIndex, projectIndex);
-    refreshProjectLayout();
-    displayProjectWithTasks()
-  });
-
-}
-
-export { createTaskCardModal, addTaskModal, editTaskModal };
+export { createTaskCardModal };
