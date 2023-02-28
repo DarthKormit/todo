@@ -95,32 +95,31 @@ function editTaskModal(
 }
 
 function editProjectModal(projectIndex) {
-    let taskForm = renameProjectModal()
-    taskForm.addEventListener("submit", (e) =>{
-      editProjectListener(e, projectIndex);
-      refreshProjectLayout();
-      displayProjectWithTasks()
-      document.getElementById("id01").remove();
-    });
-  
-  }
-  
-  function editProjectListener(e, indexofProject){
-    e.preventDefault();
-    let arrayOfProjects = JSON.parse(localStorage.getItem("projects"));
-    const formData = new FormData(e.target);
-    const obj = Object.fromEntries(formData);
-    const newProjectName = obj.name;
-    console.log(newProjectName);
-    console.log(JSON.parse(JSON.stringify(arrayOfProjects)));
-    arrayOfProjects.forEach((element, index) => {
-      arrayOfProjects[index] = unserialize(element, Project);
-    });
-    console.log(indexofProject);
-    let accessedProject = arrayOfProjects[indexofProject];
-    accessedProject.name = newProjectName;
-    console.log(JSON.parse(JSON.stringify(arrayOfProjects)));
-    localStorage.setItem("projects", JSON.stringify(arrayOfProjects));
-  }
+  let taskForm = renameProjectModal();
+  taskForm.addEventListener("submit", (e) => {
+    editProjectListener(e, projectIndex);
+    refreshProjectLayout();
+    displayProjectWithTasks();
+    document.getElementById("id01").remove();
+  });
+}
 
-export {addTaskModal, editTaskModal, editProjectModal}
+function editProjectListener(e, indexofProject) {
+  e.preventDefault();
+  let arrayOfProjects = JSON.parse(localStorage.getItem("projects"));
+  const formData = new FormData(e.target);
+  const obj = Object.fromEntries(formData);
+  const newProjectName = obj.name;
+  console.log(newProjectName);
+  console.log(JSON.parse(JSON.stringify(arrayOfProjects)));
+  arrayOfProjects.forEach((element, index) => {
+    arrayOfProjects[index] = unserialize(element, Project);
+  });
+  console.log(indexofProject);
+  let accessedProject = arrayOfProjects[indexofProject];
+  accessedProject.name = newProjectName;
+  console.log(JSON.parse(JSON.stringify(arrayOfProjects)));
+  localStorage.setItem("projects", JSON.stringify(arrayOfProjects));
+}
+
+export { addTaskModal, editTaskModal, editProjectModal };

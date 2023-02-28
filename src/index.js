@@ -5,17 +5,22 @@ import {
   createTaskCard,
 } from "./functions/projectCard";
 import { Task, Project } from "./classes/project";
+import createProjectModal from "./functions/addProject";
 
 const projectLayout = document.getElementById("project-layout");
-const addProjectButton = document.getElementById("add-project");
+
+
+// addProjectButton.addEventListener("click", ()=>{
+//   console.log("click");
+// });
 
 function myFunction() {
   document.getElementById("myDropdown").classList.toggle("show");
 }
 
-addProjectButton.addEventListener("click", () => {
-  projectLayout.appendChild(createProjectCard("Tester"));
-});
+// addProjectButton.addEventListener("click", () => {
+//   projectLayout.appendChild(createProjectCard("Tester"));
+// });
 
 // dropdownbutton.addEventListener("click", myFunction);
 
