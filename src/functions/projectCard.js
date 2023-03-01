@@ -1,4 +1,4 @@
-import { addTaskModal, editProjectModal, editTaskModal, deleteProjectModal } from "./modalListeners";
+import { addTaskModal, editProjectModal, editTaskModal, deleteProjectModal, deleteTaskModal } from "./modalListeners";
 
 function dropdownHideAll() {
   let dropdowns = document.getElementsByClassName("dropdown-content");
@@ -36,6 +36,11 @@ function taskCardDisplayModal(name, desc, sDate, dDate, prio, completed, arrayIn
   document.getElementById("id01").style.display = "block";
 }
 
+function taskDeleteModalDisplay(arrayIndex, taskProjectIndex) {
+  deleteTaskModal(arrayIndex, taskProjectIndex);
+  document.getElementById("id01").style.display = "block";
+}
+
 function createTaskCard(name, desc, sDate, dDate, prio, completed, taskIndex, projectIndex) {
   let arrayIndex = taskIndex;
   let taskProjectIndex = projectIndex;
@@ -53,7 +58,24 @@ function createTaskCard(name, desc, sDate, dDate, prio, completed, taskIndex, pr
   taskCardPTag.className = "task-description";
   taskCardPTag.innerHTML = name;
 
+  let taskCardDeleteDiv = document.createElement("div");
+  taskCardDeleteDiv.id = "task-delete-div";
+  taskCardDeleteDiv.className = "task-delete-div";
+  let taskCardDeleteButton = document.createElement("button");
+  taskCardDeleteButton.id = "task-delete-button";
+  taskCardDeleteButton.className = "task-delete-button";
+  taskCardDeleteButton.innerHTML = "Delete";
+
+  taskCardDeleteDiv.appendChild(taskCardDeleteButton);
+
+  
   taskCard.appendChild(taskCardPTag);
+  taskCard.appendChild(taskCardDeleteDiv);
+
+  taskCardDeleteButton.addEventListener("click", (e)=>{
+    e.stopImmediatePropagation();
+    taskDeleteModalDisplay(taskIndex, taskProjectIndex);
+  })
 
   taskCard.addEventListener("click", () => {
     console.log("Index: " + arrayIndex);
@@ -107,8 +129,6 @@ function createProjectDropdown(projectIndex, projectTitle) {
   return projectCardDropdown;
 }
 
-
-
 function createProjectCard(projectTitle, projectIndex) {
   let projectCard = document.createElement("div");
   projectCard.className = "project-container";
@@ -137,23 +157,6 @@ function createProjectCard(projectTitle, projectIndex) {
   projectCardHeader.appendChild(projectCardAddButton);
   projectCard.appendChild(projectCardHeader);
 
-  //create function to iterate through corresponding tasks for project
-  // projectTaskContainer.appendChild(
-  //   createTaskCard(
-  //     "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Cumlaborum facere voluptates voluptate officia error ab ipsum indistinctio dolorem omnis illum libero laboriosam facilis, quivoluptatem eligendi pariatur ipsam"
-  //   )
-  // );
-  // projectTaskContainer.appendChild(createTaskCard("Test"));
-  // projectTaskContainer.appendChild(createTaskCard("Test"));
-  // projectTaskContainer.appendChild(createTaskCard("Test"));
-  // projectTaskContainer.appendChild(
-  //   createTaskCard(
-  //     "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Cumlaborum facere voluptates voluptate officia error ab ipsum indistinctio dolorem omnis illum libero laboriosam facilis, quivoluptatem eligendi pariatur ipsam"
-  //   )
-  // );
-  // projectTaskContainer.appendChild(createTaskCard("Test"));
-  // projectTaskContainer.appendChild(createTaskCard("Test"));
-  // projectTaskContainer.appendChild(createTaskCard("34543535345353453453"));
   projectCard.appendChild(projectTaskContainer);
 
   return projectCard;

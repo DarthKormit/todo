@@ -64,7 +64,7 @@ function deleteProjectModal(projectIndex) {
   document.getElementById("task-form-submit").innerHTML = "Yes"
   document.getElementById("task-form-submit").style.backgroundColor = "rgb(156, 60, 60)";
   document.getElementById("task-form-cancel").innerHTML = "No"
-  document.getElementById("task-form-cancel").style.backgroundColor = "rgb(211, 211, 211)";
+  document.getElementById("task-form-cancel").style.backgroundColor = "rgb(190, 190, 190)";
   taskForm.addEventListener("submit", (e) => {
     deleteProjectListener(e, projectIndex);
     refreshProjectLayout();
@@ -87,6 +87,8 @@ function deleteProjectListener(e, indexofProject) {
 
 function addTaskModal(projectIndex) {
   let taskForm = createTaskCardModal();
+  document.getElementById("title").innerHTML = "";
+  document.getElementById("description").innerHTML = "";
   taskForm.addEventListener("submit", (e) => {
     addTaskListener(e, projectIndex);
     refreshProjectLayout();
@@ -123,7 +125,36 @@ function editTaskModal(
   });
 }
 
-function editProjectModal(projectIndex) {
+function deleteTaskModal(taskIndex, projectIndex) {
+  let taskForm = renameProjectModal();
+  document.getElementById("label-title").remove();
+  document.getElementById("title").remove();
+  document.getElementById("modal-title").innerHTML = "Are you sure you want to delete this Task?";
+  document.getElementById("task-form-submit").innerHTML = "Yes"
+  document.getElementById("task-form-submit").style.backgroundColor = "rgb(156, 60, 60)";
+  document.getElementById("task-form-cancel").innerHTML = "No"
+  document.getElementById("task-form-cancel").style.backgroundColor = "rgb(190, 190, 190)";
+  taskForm.addEventListener("submit", (e) => {
+    deleteTaskListener(e, taskIndex, projectIndex);
+    refreshProjectLayout();
+    displayProjectWithTasks();
+    document.getElementById("id01").remove();
+  });
+}
+
+function deleteTaskListener(e, indexofTask, projectIndex) {
+  e.preventDefault();
+  let arrayOfProjects = JSON.parse(localStorage.getItem("projects"));
+  console.log(JSON.parse(JSON.stringify(arrayOfProjects)));
+  arrayOfProjects.forEach((element, index) => {
+    arrayOfProjects[index] = unserialize(element, Project);
+  });
+  arrayOfProjects[projectIndex].tasks.splice(indexofTask, 1);
+  console.log(JSON.parse(JSON.stringify(arrayOfProjects)));
+  localStorage.setItem("projects", JSON.stringify(arrayOfProjects));
+}
+
+function editProjectModal(projectIndex, projectTitle) {
   let taskForm = renameProjectModal(projectTitle);
   taskForm.addEventListener("submit", (e) => {
     editProjectListener(e, projectIndex);
@@ -151,4 +182,4 @@ function editProjectListener(e, indexofProject) {
   localStorage.setItem("projects", JSON.stringify(arrayOfProjects));
 }
 
-export { addTaskModal, editTaskModal, editProjectModal, deleteProjectModal };
+export { addTaskModal, editTaskModal, editProjectModal, deleteProjectModal, deleteTaskModal };
