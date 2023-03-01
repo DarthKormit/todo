@@ -56,6 +56,35 @@ function editTaskListener(e, indexofTask, projectIndex) {
   localStorage.setItem("projects", JSON.stringify(arrayOfProjects));
 }
 
+function deleteProjectModal(projectIndex) {
+  let taskForm = renameProjectModal();
+  document.getElementById("label-title").remove();
+  document.getElementById("title").remove();
+  document.getElementById("modal-title").innerHTML = "Are you sure you want to delete this Project?";
+  document.getElementById("task-form-submit").innerHTML = "Yes"
+  document.getElementById("task-form-submit").style.backgroundColor = "rgb(156, 60, 60)";
+  document.getElementById("task-form-cancel").innerHTML = "No"
+  document.getElementById("task-form-cancel").style.backgroundColor = "rgb(211, 211, 211)";
+  taskForm.addEventListener("submit", (e) => {
+    deleteProjectListener(e, projectIndex);
+    refreshProjectLayout();
+    displayProjectWithTasks();
+    document.getElementById("id01").remove();
+  });
+}
+
+function deleteProjectListener(e, indexofProject) {
+  e.preventDefault();
+  let arrayOfProjects = JSON.parse(localStorage.getItem("projects"));
+  console.log(JSON.parse(JSON.stringify(arrayOfProjects)));
+  arrayOfProjects.forEach((element, index) => {
+    arrayOfProjects[index] = unserialize(element, Project);
+  });
+  arrayOfProjects.splice(indexofProject, 1);
+  console.log(JSON.parse(JSON.stringify(arrayOfProjects)));
+  localStorage.setItem("projects", JSON.stringify(arrayOfProjects));
+}
+
 function addTaskModal(projectIndex) {
   let taskForm = createTaskCardModal();
   taskForm.addEventListener("submit", (e) => {
@@ -95,7 +124,7 @@ function editTaskModal(
 }
 
 function editProjectModal(projectIndex) {
-  let taskForm = renameProjectModal();
+  let taskForm = renameProjectModal(projectTitle);
   taskForm.addEventListener("submit", (e) => {
     editProjectListener(e, projectIndex);
     refreshProjectLayout();
@@ -122,4 +151,4 @@ function editProjectListener(e, indexofProject) {
   localStorage.setItem("projects", JSON.stringify(arrayOfProjects));
 }
 
-export { addTaskModal, editTaskModal, editProjectModal };
+export { addTaskModal, editTaskModal, editProjectModal, deleteProjectModal };

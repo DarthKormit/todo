@@ -1,4 +1,4 @@
-import { addTaskModal, editProjectModal, editTaskModal } from "./modalListeners";
+import { addTaskModal, editProjectModal, editTaskModal, deleteProjectModal } from "./modalListeners";
 
 function dropdownHideAll() {
   let dropdowns = document.getElementsByClassName("dropdown-content");
@@ -63,7 +63,7 @@ function createTaskCard(name, desc, sDate, dDate, prio, completed, taskIndex, pr
   return taskCard;
 }
 
-function createProjectDropdown(projectIndex) {
+function createProjectDropdown(projectIndex, projectTitle) {
   let projectCardDropdown = document.createElement("div");
   projectCardDropdown.className = "dropdown";
 
@@ -79,14 +79,22 @@ function createProjectDropdown(projectIndex) {
   projectCardDropdownContent.id = "dropdown-content";
   projectCardDropdownContent.className = "dropdown-content";
 
-  let projectCardDropdownLinks = document.createElement("a");
-  projectCardDropdownLinks.innerHTML = "Rename";
-  projectCardDropdownLinks.addEventListener("click", () =>{
-    editProjectModal(projectIndex);
+  let projectCardDropdownLinkRename = document.createElement("a");
+  projectCardDropdownLinkRename.innerHTML = "Rename";
+  projectCardDropdownLinkRename.addEventListener("click", () =>{
+    editProjectModal(projectIndex, projectTitle);
     document.getElementById("id01").style.display = "block";
   });
 
-  projectCardDropdownContent.appendChild(projectCardDropdownLinks);
+  let projectCardDropdownLinkDelete = document.createElement("a");
+  projectCardDropdownLinkDelete.innerHTML = "Delete Project";
+  projectCardDropdownLinkDelete.addEventListener("click", () =>{
+    deleteProjectModal(projectIndex);
+    document.getElementById("id01").style.display = "block";
+  });
+
+  projectCardDropdownContent.appendChild(projectCardDropdownLinkRename);
+  projectCardDropdownContent.appendChild(projectCardDropdownLinkDelete);
   projectCardDropdownHousing.appendChild(projectCardDropdownButton);
 
   projectCardDropdown.appendChild(projectCardDropdownContent);
@@ -125,33 +133,33 @@ function createProjectCard(projectTitle, projectIndex) {
   projectTaskContainer.id = "project1";
 
   projectCardHeader.appendChild(projectCardTitle);
-  projectCardHeader.appendChild(createProjectDropdown(projectIndex));
+  projectCardHeader.appendChild(createProjectDropdown(projectIndex, projectTitle));
   projectCardHeader.appendChild(projectCardAddButton);
   projectCard.appendChild(projectCardHeader);
 
   //create function to iterate through corresponding tasks for project
-  projectTaskContainer.appendChild(
-    createTaskCard(
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Cumlaborum facere voluptates voluptate officia error ab ipsum indistinctio dolorem omnis illum libero laboriosam facilis, quivoluptatem eligendi pariatur ipsam"
-    )
-  );
-  projectTaskContainer.appendChild(createTaskCard("Test"));
-  projectTaskContainer.appendChild(createTaskCard("Test"));
-  projectTaskContainer.appendChild(createTaskCard("Test"));
-  projectTaskContainer.appendChild(
-    createTaskCard(
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Cumlaborum facere voluptates voluptate officia error ab ipsum indistinctio dolorem omnis illum libero laboriosam facilis, quivoluptatem eligendi pariatur ipsam"
-    )
-  );
-  projectTaskContainer.appendChild(createTaskCard("Test"));
-  projectTaskContainer.appendChild(createTaskCard("Test"));
-  projectTaskContainer.appendChild(createTaskCard("34543535345353453453"));
+  // projectTaskContainer.appendChild(
+  //   createTaskCard(
+  //     "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Cumlaborum facere voluptates voluptate officia error ab ipsum indistinctio dolorem omnis illum libero laboriosam facilis, quivoluptatem eligendi pariatur ipsam"
+  //   )
+  // );
+  // projectTaskContainer.appendChild(createTaskCard("Test"));
+  // projectTaskContainer.appendChild(createTaskCard("Test"));
+  // projectTaskContainer.appendChild(createTaskCard("Test"));
+  // projectTaskContainer.appendChild(
+  //   createTaskCard(
+  //     "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Cumlaborum facere voluptates voluptate officia error ab ipsum indistinctio dolorem omnis illum libero laboriosam facilis, quivoluptatem eligendi pariatur ipsam"
+  //   )
+  // );
+  // projectTaskContainer.appendChild(createTaskCard("Test"));
+  // projectTaskContainer.appendChild(createTaskCard("Test"));
+  // projectTaskContainer.appendChild(createTaskCard("34543535345353453453"));
   projectCard.appendChild(projectTaskContainer);
 
   return projectCard;
 }
 
-function renameProjectModal() {
+function renameProjectModal(projectTitle) {
   let modal = document.createElement("div");
   modal.id = "id01";
   modal.className = "modal";
@@ -176,13 +184,14 @@ function renameProjectModal() {
 
   let labelTitle = document.createElement("label");
   labelTitle.className = "form-input-label";
+  labelTitle.id = "label-title";
   labelTitle.setAttribute("for", "title");
   labelTitle.innerHTML = "Project Title:";
   let textareaTitle = document.createElement("textarea");
   textareaTitle.id = "title";
   textareaTitle.className = "input-form";
   textareaTitle.name = "name";
-  textareaTitle.innerHTML = name;
+  textareaTitle.innerHTML = projectTitle;
 
   let buttonDiv = document.createElement("div");
   buttonDiv.className = "button-div";
