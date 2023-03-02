@@ -128,6 +128,8 @@ newTask.setName("dumb");
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "addTaskModal": () => (/* binding */ addTaskModal),
+/* harmony export */   "deleteProjectModal": () => (/* binding */ deleteProjectModal),
+/* harmony export */   "deleteTaskModal": () => (/* binding */ deleteTaskModal),
 /* harmony export */   "editProjectModal": () => (/* binding */ editProjectModal),
 /* harmony export */   "editTaskModal": () => (/* binding */ editTaskModal)
 /* harmony export */ });
@@ -178,8 +180,37 @@ function editTaskListener(e, indexofTask, projectIndex) {
   console.log(JSON.parse(JSON.stringify(arrayOfProjects)));
   localStorage.setItem("projects", JSON.stringify(arrayOfProjects));
 }
+function deleteProjectModal(projectIndex) {
+  var taskForm = (0,_projectCard__WEBPACK_IMPORTED_MODULE_4__.renameProjectModal)();
+  document.getElementById("label-title").remove();
+  document.getElementById("title").remove();
+  document.getElementById("modal-title").innerHTML = "Are you sure you want to delete this Project?";
+  document.getElementById("task-form-submit").innerHTML = "Yes";
+  document.getElementById("task-form-submit").style.backgroundColor = "rgb(156, 60, 60)";
+  document.getElementById("task-form-cancel").innerHTML = "No";
+  document.getElementById("task-form-cancel").style.backgroundColor = "rgb(190, 190, 190)";
+  taskForm.addEventListener("submit", function (e) {
+    deleteProjectListener(e, projectIndex);
+    (0,_utilityFunctions__WEBPACK_IMPORTED_MODULE_3__.refreshProjectLayout)();
+    (0,___WEBPACK_IMPORTED_MODULE_1__["default"])();
+    document.getElementById("id01").remove();
+  });
+}
+function deleteProjectListener(e, indexofProject) {
+  e.preventDefault();
+  var arrayOfProjects = JSON.parse(localStorage.getItem("projects"));
+  console.log(JSON.parse(JSON.stringify(arrayOfProjects)));
+  arrayOfProjects.forEach(function (element, index) {
+    arrayOfProjects[index] = (0,_utilityFunctions__WEBPACK_IMPORTED_MODULE_3__.unserialize)(element, _classes_project__WEBPACK_IMPORTED_MODULE_2__.Project);
+  });
+  arrayOfProjects.splice(indexofProject, 1);
+  console.log(JSON.parse(JSON.stringify(arrayOfProjects)));
+  localStorage.setItem("projects", JSON.stringify(arrayOfProjects));
+}
 function addTaskModal(projectIndex) {
   var taskForm = (0,_taskModal__WEBPACK_IMPORTED_MODULE_0__.createTaskCardModal)();
+  document.getElementById("title").innerHTML = "";
+  document.getElementById("description").innerHTML = "";
   taskForm.addEventListener("submit", function (e) {
     addTaskListener(e, projectIndex);
     (0,_utilityFunctions__WEBPACK_IMPORTED_MODULE_3__.refreshProjectLayout)();
@@ -196,8 +227,35 @@ function editTaskModal(name, desc, sDate, dDate, prio, completed, taskIndex, pro
     document.getElementById("id01").remove();
   });
 }
-function editProjectModal(projectIndex) {
+function deleteTaskModal(taskIndex, projectIndex) {
   var taskForm = (0,_projectCard__WEBPACK_IMPORTED_MODULE_4__.renameProjectModal)();
+  document.getElementById("label-title").remove();
+  document.getElementById("title").remove();
+  document.getElementById("modal-title").innerHTML = "Are you sure you want to delete this Task?";
+  document.getElementById("task-form-submit").innerHTML = "Yes";
+  document.getElementById("task-form-submit").style.backgroundColor = "rgb(156, 60, 60)";
+  document.getElementById("task-form-cancel").innerHTML = "No";
+  document.getElementById("task-form-cancel").style.backgroundColor = "rgb(190, 190, 190)";
+  taskForm.addEventListener("submit", function (e) {
+    deleteTaskListener(e, taskIndex, projectIndex);
+    (0,_utilityFunctions__WEBPACK_IMPORTED_MODULE_3__.refreshProjectLayout)();
+    (0,___WEBPACK_IMPORTED_MODULE_1__["default"])();
+    document.getElementById("id01").remove();
+  });
+}
+function deleteTaskListener(e, indexofTask, projectIndex) {
+  e.preventDefault();
+  var arrayOfProjects = JSON.parse(localStorage.getItem("projects"));
+  console.log(JSON.parse(JSON.stringify(arrayOfProjects)));
+  arrayOfProjects.forEach(function (element, index) {
+    arrayOfProjects[index] = (0,_utilityFunctions__WEBPACK_IMPORTED_MODULE_3__.unserialize)(element, _classes_project__WEBPACK_IMPORTED_MODULE_2__.Project);
+  });
+  arrayOfProjects[projectIndex].tasks.splice(indexofTask, 1);
+  console.log(JSON.parse(JSON.stringify(arrayOfProjects)));
+  localStorage.setItem("projects", JSON.stringify(arrayOfProjects));
+}
+function editProjectModal(projectIndex, projectTitle) {
+  var taskForm = (0,_projectCard__WEBPACK_IMPORTED_MODULE_4__.renameProjectModal)(projectTitle);
   taskForm.addEventListener("submit", function (e) {
     editProjectListener(e, projectIndex);
     (0,_utilityFunctions__WEBPACK_IMPORTED_MODULE_3__.refreshProjectLayout)();
@@ -272,6 +330,10 @@ function taskCardDisplayModal(name, desc, sDate, dDate, prio, completed, arrayIn
   (0,_modalListeners__WEBPACK_IMPORTED_MODULE_0__.editTaskModal)(name, desc, sDate, dDate, prio, completed, arrayIndex, taskProjectIndex);
   document.getElementById("id01").style.display = "block";
 }
+function taskDeleteModalDisplay(arrayIndex, taskProjectIndex) {
+  (0,_modalListeners__WEBPACK_IMPORTED_MODULE_0__.deleteTaskModal)(arrayIndex, taskProjectIndex);
+  document.getElementById("id01").style.display = "block";
+}
 function createTaskCard(name, desc, sDate, dDate, prio, completed, taskIndex, projectIndex) {
   var arrayIndex = taskIndex;
   var taskProjectIndex = projectIndex;
@@ -286,14 +348,27 @@ function createTaskCard(name, desc, sDate, dDate, prio, completed, taskIndex, pr
   taskCardPTag.id = "task-description";
   taskCardPTag.className = "task-description";
   taskCardPTag.innerHTML = name;
+  var taskCardDeleteDiv = document.createElement("div");
+  taskCardDeleteDiv.id = "task-delete-div";
+  taskCardDeleteDiv.className = "task-delete-div";
+  var taskCardDeleteButton = document.createElement("button");
+  taskCardDeleteButton.id = "task-delete-button";
+  taskCardDeleteButton.className = "task-delete-button";
+  taskCardDeleteButton.innerHTML = "Delete";
+  taskCardDeleteDiv.appendChild(taskCardDeleteButton);
   taskCard.appendChild(taskCardPTag);
+  taskCard.appendChild(taskCardDeleteDiv);
+  taskCardDeleteButton.addEventListener("click", function (e) {
+    e.stopImmediatePropagation();
+    taskDeleteModalDisplay(taskIndex, taskProjectIndex);
+  });
   taskCard.addEventListener("click", function () {
     console.log("Index: " + arrayIndex);
     taskCardDisplayModal(name, desc, sDate, dDate, prio, completed, arrayIndex, taskProjectIndex);
   });
   return taskCard;
 }
-function createProjectDropdown(projectIndex) {
+function createProjectDropdown(projectIndex, projectTitle) {
   var projectCardDropdown = document.createElement("div");
   projectCardDropdown.className = "dropdown";
   var projectCardDropdownHousing = document.createElement("div");
@@ -305,13 +380,20 @@ function createProjectDropdown(projectIndex) {
   var projectCardDropdownContent = document.createElement("div");
   projectCardDropdownContent.id = "dropdown-content";
   projectCardDropdownContent.className = "dropdown-content";
-  var projectCardDropdownLinks = document.createElement("a");
-  projectCardDropdownLinks.innerHTML = "Rename";
-  projectCardDropdownLinks.addEventListener("click", function () {
-    (0,_modalListeners__WEBPACK_IMPORTED_MODULE_0__.editProjectModal)(projectIndex);
+  var projectCardDropdownLinkRename = document.createElement("a");
+  projectCardDropdownLinkRename.innerHTML = "Rename";
+  projectCardDropdownLinkRename.addEventListener("click", function () {
+    (0,_modalListeners__WEBPACK_IMPORTED_MODULE_0__.editProjectModal)(projectIndex, projectTitle);
     document.getElementById("id01").style.display = "block";
   });
-  projectCardDropdownContent.appendChild(projectCardDropdownLinks);
+  var projectCardDropdownLinkDelete = document.createElement("a");
+  projectCardDropdownLinkDelete.innerHTML = "Delete Project";
+  projectCardDropdownLinkDelete.addEventListener("click", function () {
+    (0,_modalListeners__WEBPACK_IMPORTED_MODULE_0__.deleteProjectModal)(projectIndex);
+    document.getElementById("id01").style.display = "block";
+  });
+  projectCardDropdownContent.appendChild(projectCardDropdownLinkRename);
+  projectCardDropdownContent.appendChild(projectCardDropdownLinkDelete);
   projectCardDropdownHousing.appendChild(projectCardDropdownButton);
   projectCardDropdown.appendChild(projectCardDropdownContent);
   projectCardDropdown.appendChild(projectCardDropdownHousing);
@@ -339,23 +421,13 @@ function createProjectCard(projectTitle, projectIndex) {
   projectTaskContainer.className = "project";
   projectTaskContainer.id = "project1";
   projectCardHeader.appendChild(projectCardTitle);
-  projectCardHeader.appendChild(createProjectDropdown(projectIndex));
+  projectCardHeader.appendChild(createProjectDropdown(projectIndex, projectTitle));
   projectCardHeader.appendChild(projectCardAddButton);
   projectCard.appendChild(projectCardHeader);
-
-  //create function to iterate through corresponding tasks for project
-  projectTaskContainer.appendChild(createTaskCard("Lorem ipsum dolor sit amet consectetur, adipisicing elit. Cumlaborum facere voluptates voluptate officia error ab ipsum indistinctio dolorem omnis illum libero laboriosam facilis, quivoluptatem eligendi pariatur ipsam"));
-  projectTaskContainer.appendChild(createTaskCard("Test"));
-  projectTaskContainer.appendChild(createTaskCard("Test"));
-  projectTaskContainer.appendChild(createTaskCard("Test"));
-  projectTaskContainer.appendChild(createTaskCard("Lorem ipsum dolor sit amet consectetur, adipisicing elit. Cumlaborum facere voluptates voluptate officia error ab ipsum indistinctio dolorem omnis illum libero laboriosam facilis, quivoluptatem eligendi pariatur ipsam"));
-  projectTaskContainer.appendChild(createTaskCard("Test"));
-  projectTaskContainer.appendChild(createTaskCard("Test"));
-  projectTaskContainer.appendChild(createTaskCard("34543535345353453453"));
   projectCard.appendChild(projectTaskContainer);
   return projectCard;
 }
-function renameProjectModal() {
+function renameProjectModal(projectTitle) {
   var modal = document.createElement("div");
   modal.id = "id01";
   modal.className = "modal";
@@ -378,13 +450,14 @@ function renameProjectModal() {
   inputDiv.className = "form-input";
   var labelTitle = document.createElement("label");
   labelTitle.className = "form-input-label";
+  labelTitle.id = "label-title";
   labelTitle.setAttribute("for", "title");
   labelTitle.innerHTML = "Project Title:";
   var textareaTitle = document.createElement("textarea");
   textareaTitle.id = "title";
   textareaTitle.className = "input-form";
   textareaTitle.name = "name";
-  textareaTitle.innerHTML = name;
+  textareaTitle.innerHTML = projectTitle;
   var buttonDiv = document.createElement("div");
   buttonDiv.className = "button-div";
   var submitButton = document.createElement("button");
@@ -674,77 +747,32 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _styles_main_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./styles/main.scss */ "./src/styles/main.scss");
-/* harmony import */ var _assets_unga_jpg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./assets/unga.jpg */ "./src/assets/unga.jpg");
-/* harmony import */ var _functions_projectCard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./functions/projectCard */ "./src/functions/projectCard.js");
-/* harmony import */ var _classes_project__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./classes/project */ "./src/classes/project.js");
+/* harmony import */ var _functions_projectCard__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./functions/projectCard */ "./src/functions/projectCard.js");
 
 
-
+// import createProjectModal from "./functions/addProject";
 
 var projectLayout = document.getElementById("project-layout");
-// const addProjectButton = document.getElementById("add-project");
+
+// addProjectButton.addEventListener("click", ()=>{
+//   console.log("click");
+// });
 
 function myFunction() {
   document.getElementById("myDropdown").classList.toggle("show");
 }
-
-// addProjectButton.addEventListener("click", () => {
-//   projectLayout.appendChild(createProjectCard("Tester"));
-// });
-
-// dropdownbutton.addEventListener("click", myFunction);
-
-// window.onclick = function (event) {
-//   if (!event.target.matches(".project-dropdown-menu")) {
-//     var dropdowns = document.getElementsByClassName("dropdown-content");
-//     var i;
-//     for (i = 0; i < dropdowns.length; i++) {
-//       var openDropdown = dropdowns[i];
-//       if (openDropdown.classList.contains("show")) {
-//         openDropdown.classList.remove("show");
-//       }
-//     }
-//   }
-// };
-
-projectLayout.appendChild((0,_functions_projectCard__WEBPACK_IMPORTED_MODULE_2__.createProjectCard)("Tester"));
-// createTaskCardModal();
-var task2 = new _classes_project__WEBPACK_IMPORTED_MODULE_3__.Task("Create a new way to pump water out of the tank in the garden", "This will require a multitude of equipment and resourses to complete", "2023-02-18", "2023-02-25", "no", "low");
-var task3 = new _classes_project__WEBPACK_IMPORTED_MODULE_3__.Task("Create a new way to pump water into the tank in the garden", "This will require a multitude of equipment and resourses to complete", "2023-02-18", "2023-02-25", "yes", "medium");
-var projectTest = new _classes_project__WEBPACK_IMPORTED_MODULE_3__.Project("Project 1", "This is the first test project", "2023-02-18", "2023-02-23", "no");
-var task4 = new _classes_project__WEBPACK_IMPORTED_MODULE_3__.Task("Create a new way to pump water out of the tank in the garden", "This will require a multitude of equipment and resourses to complete", "2023-02-18", "2023-02-25", "no", "low");
-var task5 = new _classes_project__WEBPACK_IMPORTED_MODULE_3__.Task("Create a new way to pump water into the tank in the garden", "This will require a multitude of equipment and resourses to complete", "2023-02-18", "2023-02-25", "yes", "medium");
-var projectTest2 = new _classes_project__WEBPACK_IMPORTED_MODULE_3__.Project("Project 2", "This is the first test project", "2023-02-18", "2023-02-23", "no");
-
-// projectTest.addTask(task2);
-// projectTest.addTask(task3);
-
-// projectTest2.addTask(task4);
-// projectTest2.addTask(task5);
-
-// let arr = [task2, task3];
-
-// console.log(arr[1].name);
-// console.log(projectTest);
-// console.log(projectTest.tasks.length);
-
-// let arrayOfProjects = [];
-// arrayOfProjects.push(projectTest, projectTest2);
-
-// localStorage.setItem("projects", JSON.stringify(arrayOfProjects));
-
 function displayProjectWithTasks() {
   var arrayOfDisplayProjects = JSON.parse(localStorage.getItem("projects"));
   arrayOfDisplayProjects.forEach(function (element, index) {
     var projectIndex = index;
     console.log(projectIndex);
-    var newProjectCard = (0,_functions_projectCard__WEBPACK_IMPORTED_MODULE_2__.createProjectCard)(element.name, projectIndex);
+    var newProjectCard = (0,_functions_projectCard__WEBPACK_IMPORTED_MODULE_1__.createProjectCard)(element.name, projectIndex);
     projectLayout.appendChild(newProjectCard);
     element.tasks.forEach(function (element, index) {
       console.log(element.name);
       console.log(index);
       console.log(projectIndex);
-      newProjectCard.childNodes[1].appendChild((0,_functions_projectCard__WEBPACK_IMPORTED_MODULE_2__.createTaskCard)(element.name, element.description, element.startDate, element.dueDate, element.priority, element.completed, index, projectIndex));
+      newProjectCard.childNodes[1].appendChild((0,_functions_projectCard__WEBPACK_IMPORTED_MODULE_1__.createTaskCard)(element.name, element.description, element.startDate, element.dueDate, element.priority, element.completed, index, projectIndex));
     });
   });
 }
@@ -778,7 +806,7 @@ var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBP
 ___CSS_LOADER_EXPORT___.push([module.id, "@import url(https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap);"]);
 var ___CSS_LOADER_URL_REPLACEMENT_0___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_0___);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "* {\n  box-sizing: border-box;\n}\n\nbody {\n  background-image: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");\n  background-repeat: no-repeat;\n  background-attachment: fixed;\n  background-size: cover;\n  font-family: \"Roboto\", sans-serif;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  height: 100vh;\n  overflow: auto;\n  overflow-y: hidden;\n  margin: 0;\n  padding-top: 20px;\n}\n\n.container {\n  background-color: #f4f4f4;\n  border-radius: 10px;\n  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);\n  padding: 50px 20px;\n  text-align: center;\n  max-width: 100%;\n  width: 800px;\n}\n\nh3 {\n  margin: 0;\n  opacity: 0.5;\n  letter-spacing: 2px;\n}\n\nimg {\n  width: 100px;\n  margin-bottom: 20px;\n}\n\n.joke {\n  font-size: 30px;\n  letter-spacing: 1px;\n  line-height: 40px;\n  margin: 50px auto;\n  max-width: 600px;\n}\n\n.btn {\n  background-color: #2fa8cc;\n  color: #f4f4f4;\n  border: 0;\n  border-radius: 10px;\n  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);\n  padding: 14px 40px;\n  font-size: 16px;\n  cursor: pointer;\n}\n.btn:active {\n  transform: scale(0.98);\n}\n.btn:focus {\n  outline: 0;\n}\n\nheader {\n  font-size: larger;\n  text-align: center;\n}\n\n.project-layout {\n  padding: 1rem;\n  max-height: 100%;\n  height: 100%;\n  max-width: 100vw;\n  width: 100vw;\n  display: grid;\n  row-gap: 5.5rem;\n  column-gap: 1rem;\n  position: relative;\n  grid-template-columns: repeat(auto-fill, 300px);\n  grid-auto-flow: column;\n  overflow-x: auto;\n  overflow-y: hidden;\n}\n\n.project-container {\n  overflow-y: hidden;\n  overflow-x: hidden;\n  background-color: rgba(168, 168, 168, 0.7176470588);\n  height: 100%;\n  width: 300px;\n  border-radius: 5px;\n}\n\n.project {\n  overflow-y: scroll;\n  display: grid;\n  width: 90% px;\n  height: 92%;\n  padding: 1rem;\n  row-gap: 1rem;\n}\n\n.task {\n  background-color: gray;\n  padding: 2px;\n}\n\n.task-completed {\n  background-color: #468b48;\n}\n\n.task:hover {\n  background-color: rgb(145, 145, 145);\n}\n\n.task:active {\n  background-color: rgb(172, 172, 172);\n}\n\n.circular-add-button {\n  border: none;\n  overflow: hidden;\n  text-decoration: none;\n  color: inherit;\n  background-color: transparent;\n  text-align: center;\n  cursor: pointer;\n  white-space: nowrap;\n  float: right;\n  font-size: 24px;\n  width: 3rem;\n  margin-left: auto;\n}\n\n.circular-add-button:hover {\n  background-color: gray;\n}\n\n.circular-add-button:active {\n  background-color: rgb(223, 223, 223);\n}\n\n.project-title {\n  display: flex;\n  background: transparent;\n  border: none;\n  box-shadow: none;\n  font-size: larger;\n  vertical-align: middle;\n  text-align: center;\n  margin: auto;\n  width: 100%;\n  font-family: \"Roboto\", sans-serif;\n  box-sizing: border-box;\n  justify-content: center;\n}\n\n.project-title:focus {\n  cursor: text;\n}\n\n.project-header {\n  display: flex;\n  justify-content: center;\n  align-content: center;\n  background-color: rgba(168, 168, 168, 0.8823529412);\n  height: 8%;\n  padding: 10px;\n}\n\n.button-housing {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  vertical-align: middle;\n}\n\n.project-dropdown-menu {\n  display: inline-flex;\n  justify-content: center;\n  vertical-align: middle;\n  font-size: larger;\n  background-color: transparent;\n  border: none;\n  align-items: center;\n  padding: 0;\n  line-height: 20px;\n  height: 40px;\n  width: 40px;\n}\n\n.project-dropdown-menu:hover {\n  background-color: gray;\n}\n\n.project-dropdown-menu:active {\n  background-color: rgb(153, 153, 153);\n}\n\n.project-dropdown-menu:focus {\n  background-color: rgb(153, 153, 153);\n}\n\n.dropdown {\n  position: relative;\n  display: flex;\n}\n\n.dropdown-content {\n  display: none;\n  position: absolute;\n  top: 65px;\n  background-color: #f9f9f9;\n  min-width: 160px;\n  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);\n  z-index: 1;\n  cursor: pointer;\n}\n\n.dropdown-content-block {\n  display: block;\n}\n\n.dropdown-content a {\n  color: black;\n  padding: 12px 16px;\n  text-decoration: none;\n  display: block;\n}\n\n.dropdown-content a:hover {\n  background-color: #f1f1f1;\n}\n\n.dropdown:hover .dropbtn {\n  background-color: #3e8e41;\n}\n\n.show {\n  display: block;\n}\n\n.task-description {\n  -webkit-user-select: none;\n  /* Safari */\n  -moz-user-select: none;\n  /* Firefox */\n  -ms-user-select: none;\n  /* IE10+/Edge */\n  user-select: none;\n  /* Standard */\n}\n\n.modal {\n  z-index: 3;\n  display: none;\n  padding-top: 100px;\n  position: fixed;\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100%;\n  overflow: auto;\n  background-color: rgb(0, 0, 0);\n  background-color: rgba(0, 0, 0, 0.4);\n}\n\n.modal-content {\n  margin: auto;\n  background-color: rgb(179, 179, 179);\n  position: relative;\n  justify-content: center;\n  flex-wrap: nowrap;\n  padding: 0;\n  outline: 0;\n  width: 600px;\n  padding: 20px;\n}\n\n.close-x-button {\n  display: flex;\n  justify-content: right;\n  margin-right: 4px;\n  cursor: pointer;\n}\n\n.task-form {\n  width: 100%;\n  justify-content: center;\n}\n\n.form-input {\n  width: 100%;\n  justify-content: center;\n  align-items: center;\n}\n\n.button-div {\n  display: flex;\n  position: relative;\n  justify-content: center;\n  align-items: center;\n  padding: 5px;\n  padding-top: 10px;\n}\n\n.form-button {\n  border: none;\n  color: white;\n  padding: 15px 32px;\n  text-align: center;\n  text-decoration: none;\n  display: inline-block;\n  font-size: 16px;\n  margin-right: 10px;\n}\n\n#task-form-submit {\n  background-color: #3e8e41;\n}\n\n#task-form-cancel {\n  background-color: rgb(156, 60, 60);\n}\n\n.form-input-label {\n  padding-right: 5px;\n}\n\nselect {\n  display: flex;\n  justify-content: center;\n  margin: auto;\n  margin-bottom: 10px;\n  align-self: center;\n  resize: none;\n  width: 100%;\n  padding: 5px;\n}\n\n.input-form {\n  display: flex;\n  justify-content: center;\n  margin: auto;\n  margin-bottom: 10px;\n  align-self: center;\n  resize: none;\n  width: 100%;\n  padding: 5px;\n}", "",{"version":3,"sources":["webpack://./src/styles/main.scss"],"names":[],"mappings":"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","sourcesContent":["@import url(\"https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap\");\r\n\r\n$primary-color: #2fa8cc;\r\n$secondary-color: #f4f4f4;\r\n$box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);\r\n\r\n* {\r\n  box-sizing: border-box;\r\n}\r\n\r\nbody {\r\n  // background-color: $primary-color;\r\n  background-image: url(\"../assets/background.jpg\");\r\n  background-repeat: no-repeat;\r\n  background-attachment: fixed;\r\n  background-size: cover;\r\n  font-family: \"Roboto\", sans-serif;\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  justify-content: center;\r\n  height: 100vh;\r\n  overflow: auto;\r\n  overflow-y: hidden;\r\n  margin: 0;\r\n  padding-top: 20px;\r\n}\r\n\r\n.container {\r\n  background-color: $secondary-color;\r\n  border-radius: 10px;\r\n  box-shadow: $box-shadow;\r\n  padding: 50px 20px;\r\n  text-align: center;\r\n  max-width: 100%;\r\n  width: 800px;\r\n}\r\n\r\nh3 {\r\n  margin: 0;\r\n  opacity: 0.5;\r\n  letter-spacing: 2px;\r\n}\r\n\r\nimg {\r\n  width: 100px;\r\n  margin-bottom: 20px;\r\n}\r\n\r\n.joke {\r\n  font-size: 30px;\r\n  letter-spacing: 1px;\r\n  line-height: 40px;\r\n  margin: 50px auto;\r\n  max-width: 600px;\r\n}\r\n\r\n.btn {\r\n  background-color: $primary-color;\r\n  color: $secondary-color;\r\n  border: 0;\r\n  border-radius: 10px;\r\n  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);\r\n  padding: 14px 40px;\r\n  font-size: 16px;\r\n  cursor: pointer;\r\n\r\n  &:active {\r\n    transform: scale(0.98);\r\n  }\r\n\r\n  &:focus {\r\n    outline: 0;\r\n  }\r\n}\r\n\r\nheader {\r\n  font-size: larger;\r\n  text-align: center;\r\n}\r\n\r\n.project-layout {\r\n  // background-color: rgb(201, 201, 201);\r\n  padding: 1rem;\r\n  max-height: 100%;\r\n  height: 100%;\r\n  max-width: 100vw;\r\n  width: 100vw;\r\n  display: grid;\r\n  row-gap: 5.5rem;\r\n  column-gap: 1rem;\r\n  position: relative;\r\n  grid-template-columns: repeat(auto-fill, 300px);\r\n  grid-auto-flow: column;\r\n  overflow-x: auto;\r\n  overflow-y: hidden;\r\n}\r\n\r\n.project-container {\r\n  overflow-y: hidden;\r\n  overflow-x: hidden;\r\n  background-color: #a8a8a8b7;\r\n  height: 100%;\r\n  width: 300px;\r\n  border-radius: 5px;\r\n}\r\n\r\n.project {\r\n  overflow-y: scroll;\r\n  display: grid;\r\n  // background-color: #a8a8a8b7;\r\n  width: 90%px;\r\n  height: 92%;\r\n  padding: 1rem;\r\n  // gap: 1rem;\r\n  row-gap: 1rem;\r\n  // grid-template-rows: 60px;\r\n}\r\n\r\n.task {\r\n  background-color: gray;\r\n  padding: 2px;\r\n}\r\n\r\n.task-completed{\r\n  background-color: #468b48;\r\n}\r\n\r\n.task:hover {\r\n  background-color: rgb(145, 145, 145);\r\n}\r\n\r\n.task:active {\r\n  background-color: rgb(172, 172, 172);\r\n}\r\n\r\n.circular-add-button {\r\n  border: none;\r\n  overflow: hidden;\r\n  text-decoration: none;\r\n  color: inherit;\r\n  background-color: transparent;\r\n  text-align: center;\r\n  cursor: pointer;\r\n  white-space: nowrap;\r\n  float: right;\r\n  font-size: 24px;\r\n  width: 3rem;\r\n  margin-left: auto;\r\n}\r\n\r\n.circular-add-button:hover {\r\n  background-color: gray;\r\n}\r\n\r\n.circular-add-button:active {\r\n  background-color: rgb(223, 223, 223);\r\n}\r\n\r\n// .project-title {\r\n//   display: flex;\r\n//   margin-left: auto;\r\n//   resize: none;\r\n// }\r\n\r\n.project-title {\r\n  display: flex;\r\n  background: transparent;\r\n  border: none;\r\n  box-shadow: none;\r\n  font-size: larger;\r\n  vertical-align: middle;\r\n  text-align: center;\r\n  margin: auto;\r\n  width: 100%;\r\n  font-family: \"Roboto\", sans-serif;\r\n  box-sizing: border-box;\r\n  justify-content: center;\r\n}\r\n\r\n.project-title:focus {\r\n  cursor: text;\r\n}\r\n\r\n.project-header {\r\n  display: flex;\r\n  justify-content: center;\r\n  align-content: center;\r\n  background-color: #a8a8a8e1;\r\n  height: 8%;\r\n  padding: 10px;\r\n}\r\n\r\n.button-housing {\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  vertical-align: middle;\r\n}\r\n\r\n.project-dropdown-menu {\r\n  display: inline-flex;\r\n  justify-content: center;\r\n  vertical-align: middle;\r\n  font-size: larger;\r\n  background-color: transparent;\r\n  border: none;\r\n  align-items: center;\r\n  padding: 0;\r\n  line-height: 20px;\r\n  height: 40px;\r\n  width: 40px;\r\n}\r\n\r\n.project-dropdown-menu:hover {\r\n  background-color: gray;\r\n}\r\n\r\n.project-dropdown-menu:active {\r\n  background-color: rgb(153, 153, 153);\r\n}\r\n\r\n.project-dropdown-menu:focus {\r\n  background-color: rgb(153, 153, 153);\r\n}\r\n\r\n.dropdown {\r\n  position: relative;\r\n  display: flex;\r\n}\r\n\r\n.dropdown-content {\r\n  display: none;\r\n  position: absolute;\r\n  top: 65px;\r\n  background-color: #f9f9f9;\r\n  min-width: 160px;\r\n  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);\r\n  z-index: 1;\r\n  cursor: pointer;\r\n}\r\n\r\n.dropdown-content-block{\r\n  display: block;\r\n}\r\n\r\n.dropdown-content a {\r\n  color: black;\r\n  padding: 12px 16px;\r\n  text-decoration: none;\r\n  display: block;\r\n}\r\n\r\n.dropdown-content a:hover {\r\n  background-color: #f1f1f1;\r\n}\r\n\r\n// .dropdown:hover .dropdown-content {\r\n//   display: block;\r\n// }\r\n\r\n.dropdown:hover .dropbtn {\r\n  background-color: #3e8e41;\r\n}\r\n\r\n.show {\r\n  display: block;\r\n}\r\n\r\n.task-description {\r\n  -webkit-user-select: none;\r\n  /* Safari */\r\n  -moz-user-select: none;\r\n  /* Firefox */\r\n  -ms-user-select: none;\r\n  /* IE10+/Edge */\r\n  user-select: none;\r\n  /* Standard */\r\n}\r\n\r\n.modal {\r\n  z-index: 3;\r\n  display: none;\r\n  padding-top: 100px;\r\n  position: fixed;\r\n  left: 0;\r\n  top: 0;\r\n  width: 100%;\r\n  height: 100%;\r\n  overflow: auto;\r\n  background-color: rgb(0, 0, 0);\r\n  background-color: rgba(0, 0, 0, 0.4);\r\n}\r\n\r\n.modal-content {\r\n  margin: auto;\r\n  background-color: rgb(179, 179, 179);\r\n  position: relative;\r\n  justify-content: center;\r\n  flex-wrap: nowrap;\r\n  padding: 0;\r\n  outline: 0;\r\n  width: 600px;\r\n  padding: 20px;\r\n}\r\n\r\n.close-x-button{\r\n  display: flex;\r\n  justify-content: right;\r\n  margin-right: 4px;\r\n  cursor: pointer;\r\n}\r\n\r\n.task-form{\r\n  width: 100%;\r\n  justify-content: center;\r\n}\r\n\r\n.form-input{\r\n  width: 100%;\r\n  justify-content: center;\r\n  align-items: center;\r\n}\r\n\r\n.button-div{\r\n  display: flex;\r\n  position: relative;\r\n  justify-content: center;\r\n  align-items: center;\r\n  padding: 5px;\r\n  padding-top: 10px;\r\n}\r\n\r\n.form-button{\r\n  border: none;\r\n  color: white;\r\n  padding: 15px 32px;\r\n  text-align: center;\r\n  text-decoration: none;\r\n  display: inline-block;\r\n  font-size: 16px;\r\n  margin-right: 10px;\r\n}\r\n\r\n#task-form-submit{\r\n  background-color: #3e8e41;\r\n}\r\n\r\n#task-form-cancel{\r\n  background-color: rgb(156, 60, 60);\r\n}\r\n\r\n.form-input-label{\r\n  padding-right: 5px;\r\n}\r\n\r\nselect{\r\n  display: flex;\r\n  justify-content: center;\r\n  margin: auto;\r\n  margin-bottom: 10px;\r\n  align-self: center;\r\n  resize: none;\r\n  width: 100%;\r\n  padding: 5px;\r\n}\r\n\r\n.input-form{\r\n  display: flex;\r\n  justify-content: center;\r\n  margin: auto;\r\n  margin-bottom: 10px;\r\n  align-self: center;\r\n  resize: none;\r\n  width: 100%;\r\n  padding: 5px;\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "* {\n  box-sizing: border-box;\n  scrollbar-color: rgb(153, 142, 167) rgb(223, 214, 231);\n  scrollbar-width: auto;\n}\n\nbody {\n  background-image: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");\n  background-repeat: no-repeat;\n  background-attachment: fixed;\n  background-size: cover;\n  font-family: \"Roboto\", sans-serif;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  height: 100vh;\n  overflow: auto;\n  overflow-y: hidden;\n  margin: 0;\n  padding-top: 20px;\n}\n\n.container {\n  background-color: #f4f4f4;\n  border-radius: 10px;\n  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);\n  padding: 50px 20px;\n  text-align: center;\n  max-width: 100%;\n  width: 800px;\n}\n\nh3 {\n  margin: 0;\n  opacity: 0.5;\n  letter-spacing: 2px;\n}\n\n#modal-title {\n  font-size: xx-large;\n  margin: auto;\n}\n\nimg {\n  width: 100px;\n  margin-bottom: 20px;\n}\n\n.joke {\n  font-size: 30px;\n  letter-spacing: 1px;\n  line-height: 40px;\n  margin: 50px auto;\n  max-width: 600px;\n}\n\n.btn {\n  background-color: #2fa8cc;\n  color: #f4f4f4;\n  border: 0;\n  border-radius: 10px;\n  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);\n  padding: 14px 40px;\n  font-size: 16px;\n  cursor: pointer;\n}\n.btn:active {\n  transform: scale(0.98);\n}\n.btn:focus {\n  outline: 0;\n}\n\nheader {\n  font-size: 42px;\n  text-align: center;\n  font-family: \"Courier New\", Courier, monospace;\n}\n\n.project-layout {\n  padding: 1rem;\n  max-height: 100%;\n  height: 100%;\n  max-width: 100vw;\n  width: 100vw;\n  display: grid;\n  row-gap: 5.5rem;\n  column-gap: 1rem;\n  position: relative;\n  grid-template-columns: repeat(auto-fill, 300px);\n  grid-auto-flow: column;\n  overflow-x: auto;\n  overflow-y: hidden;\n}\n\n.project-container {\n  overflow-y: hidden;\n  overflow-x: hidden;\n  background-color: rgba(156, 154, 172, 0.897);\n  height: 100%;\n  width: 300px;\n  border-radius: 5px;\n  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);\n}\n\n.project {\n  overflow-y: scroll;\n  display: grid;\n  width: 100%;\n  height: 92%;\n  padding: 0.75rem;\n  row-gap: 1rem;\n  scrollbar-color: rgb(153, 142, 167) rgb(223, 214, 231);\n  scrollbar-width: thin;\n  grid-auto-rows: max-content;\n}\n\n.task {\n  background-color: rgb(143, 131, 145);\n  padding: 10px;\n  height: fit-content;\n  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);\n  cursor: pointer;\n}\n\n.task > task-delete-button:hover {\n  background-color: gray;\n}\n\n.task-completed {\n  background-color: #337c34;\n}\n\n.task:hover {\n  background-color: rgb(127, 117, 129);\n}\n\n.task:active {\n  background-color: rgb(158, 145, 160);\n}\n\n.circular-add-button {\n  border: none;\n  overflow: hidden;\n  text-decoration: none;\n  color: inherit;\n  background-color: transparent;\n  text-align: center;\n  cursor: pointer;\n  white-space: nowrap;\n  float: right;\n  font-size: 24px;\n  width: 3rem;\n  margin-left: auto;\n}\n\n.circular-add-button:hover {\n  background-color: gray;\n}\n\n.circular-add-button:active {\n  background-color: rgb(223, 223, 223);\n}\n\n.project-title {\n  display: flex;\n  background: transparent;\n  border: none;\n  box-shadow: none;\n  font-size: larger;\n  font-style: normal;\n  vertical-align: middle;\n  text-align: center;\n  margin: auto;\n  width: 100%;\n  box-sizing: border-box;\n  justify-content: center;\n  font-family: \"Courier New\", Courier, monospace;\n}\n\n.project-title:focus {\n  cursor: text;\n}\n\n.project-header {\n  display: flex;\n  justify-content: center;\n  align-content: center;\n  background-color: rgb(135, 133, 153);\n  height: 8%;\n  padding: 10px;\n}\n\n.button-housing {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  vertical-align: middle;\n}\n\n.project-dropdown-menu {\n  display: inline-flex;\n  justify-content: center;\n  vertical-align: middle;\n  font-size: larger;\n  background-color: transparent;\n  border: none;\n  align-items: center;\n  padding: 0;\n  line-height: 20px;\n  height: 40px;\n  width: 40px;\n  cursor: pointer;\n}\n\n.project-dropdown-menu:hover {\n  background-color: gray;\n}\n\n.project-dropdown-menu:active {\n  background-color: rgb(153, 153, 153);\n}\n\n.project-dropdown-menu:focus {\n  background-color: rgb(153, 153, 153);\n}\n\n.dropdown {\n  position: flex;\n  display: flex;\n}\n\n.dropdown-content {\n  display: none;\n  position: absolute;\n  top: 65px;\n  background-color: #f9f9f9;\n  min-width: 160px;\n  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);\n  z-index: 1;\n  cursor: pointer;\n}\n\n.dropdown-content-block {\n  display: block;\n}\n\n.dropdown-content a {\n  color: black;\n  padding: 12px 16px;\n  text-decoration: none;\n  display: block;\n}\n\n.dropdown-content a:hover {\n  background-color: #f1f1f1;\n}\n\n.dropdown:hover .dropbtn {\n  background-color: #3e8e41;\n}\n\n.show {\n  display: block;\n}\n\n.task-description {\n  -webkit-user-select: none;\n  /* Safari */\n  -moz-user-select: none;\n  /* Firefox */\n  -ms-user-select: none;\n  /* IE10+/Edge */\n  user-select: none;\n  /* Standard */\n}\n\n.modal {\n  z-index: 3;\n  display: none;\n  padding-top: 100px;\n  position: fixed;\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100%;\n  overflow: auto;\n  background-color: rgb(0, 0, 0);\n  background-color: rgba(0, 0, 0, 0.4);\n}\n\n.modal-content {\n  margin: auto;\n  background-color: rgb(179, 179, 179);\n  position: relative;\n  justify-content: center;\n  flex-wrap: nowrap;\n  padding: 0;\n  outline: 0;\n  width: 600px;\n  padding: 20px;\n}\n\n.close-x-button {\n  display: flex;\n  justify-content: right;\n  margin-right: 4px;\n  cursor: pointer;\n}\n\n.task-form {\n  width: 100%;\n  justify-content: center;\n}\n\n.form-input {\n  width: 100%;\n  justify-content: center;\n  align-items: center;\n}\n\n.button-div {\n  display: flex;\n  position: relative;\n  justify-content: center;\n  align-items: center;\n  padding: 5px;\n  padding-top: 10px;\n}\n\n.form-button {\n  border: none;\n  color: white;\n  padding: 15px 32px;\n  text-align: center;\n  text-decoration: none;\n  display: inline-block;\n  font-size: 16px;\n  margin-right: 10px;\n  cursor: pointer;\n}\n\n#task-form-submit {\n  background-color: #3e8e41;\n}\n\n#task-form-cancel {\n  background-color: rgb(156, 60, 60);\n}\n\n.form-input-label {\n  padding-right: 5px;\n}\n\nselect {\n  display: flex;\n  justify-content: center;\n  margin: auto;\n  margin-bottom: 10px;\n  align-self: center;\n  resize: none;\n  width: 100%;\n  padding: 5px;\n}\n\n.input-form {\n  display: flex;\n  justify-content: center;\n  margin: auto;\n  margin-bottom: 10px;\n  align-self: center;\n  resize: none;\n  width: 100%;\n  padding: 5px;\n}\n\n.task-delete-div {\n  display: flex;\n  justify-content: right;\n}\n\n.task-delete-button {\n  background-color: #c0392b;\n  border: solid 2px #c0392b;\n  border-radius: 4px;\n  text-align: center;\n  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);\n  font-size: 15px;\n  cursor: pointer;\n}\n\n.task-delete-button:hover {\n  background-color: #da4332;\n  border: solid 2px #da4332;\n}\n\n.task-delete-button:active {\n  background-color: #c0392b;\n  border: solid 2px #c0392b;\n}\n\n#add-project {\n  font-size: medium;\n  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);\n  background-color: rgb(166, 171, 209);\n  border: 3px solid rgb(166, 171, 209);\n  border-radius: 3px;\n}", "",{"version":3,"sources":["webpack://./src/styles/main.scss"],"names":[],"mappings":"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","sourcesContent":["@import url(\"https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap\");\r\n\r\n$primary-color: #2fa8cc;\r\n$secondary-color: #f4f4f4;\r\n$box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);\r\n\r\n* {\r\n  box-sizing: border-box;\r\n  scrollbar-color: rgb(153, 142, 167) rgb(223, 214, 231);\r\n  scrollbar-width:auto;\r\n}\r\n\r\nbody {\r\n  // background-color: $primary-color;\r\n  background-image: url(\"../assets/background.jpg\");\r\n  background-repeat: no-repeat;\r\n  background-attachment: fixed;\r\n  background-size: cover;\r\n  font-family: \"Roboto\", sans-serif;\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  justify-content: center;\r\n  height: 100vh;\r\n  overflow: auto;\r\n  overflow-y: hidden;\r\n  margin: 0;\r\n  padding-top: 20px;\r\n}\r\n\r\n.container {\r\n  background-color: $secondary-color;\r\n  border-radius: 10px;\r\n  box-shadow: $box-shadow;\r\n  padding: 50px 20px;\r\n  text-align: center;\r\n  max-width: 100%;\r\n  width: 800px;\r\n}\r\n\r\nh3 {\r\n  margin: 0;\r\n  opacity: 0.5;\r\n  letter-spacing: 2px;\r\n}\r\n\r\n#modal-title{\r\n  font-size: xx-large;\r\n  margin: auto;\r\n}\r\n\r\nimg {\r\n  width: 100px;\r\n  margin-bottom: 20px;\r\n}\r\n\r\n.joke {\r\n  font-size: 30px;\r\n  letter-spacing: 1px;\r\n  line-height: 40px;\r\n  margin: 50px auto;\r\n  max-width: 600px;\r\n}\r\n\r\n.btn {\r\n  background-color: $primary-color;\r\n  color: $secondary-color;\r\n  border: 0;\r\n  border-radius: 10px;\r\n  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);\r\n  padding: 14px 40px;\r\n  font-size: 16px;\r\n  cursor: pointer;\r\n\r\n  &:active {\r\n    transform: scale(0.98);\r\n  }\r\n\r\n  &:focus {\r\n    outline: 0;\r\n  }\r\n}\r\n\r\nheader {\r\n  font-size: 42px;\r\n  text-align: center;\r\n  font-family: 'Courier New', Courier, monospace;\r\n}\r\n\r\n.project-layout {\r\n  // background-color: rgb(201, 201, 201);\r\n  padding: 1rem;\r\n  max-height: 100%;\r\n  height: 100%;\r\n  max-width: 100vw;\r\n  width: 100vw;\r\n  display: grid;\r\n  row-gap: 5.5rem;\r\n  column-gap: 1rem;\r\n  position: relative;\r\n  grid-template-columns: repeat(auto-fill, 300px);\r\n  grid-auto-flow: column;\r\n  overflow-x: auto;\r\n  overflow-y: hidden;\r\n}\r\n\r\n.project-container {\r\n  overflow-y: hidden;\r\n  overflow-x: hidden;\r\n  background-color: rgba(156, 154, 172, 0.897);\r\n  height: 100%;\r\n  width: 300px;\r\n  border-radius: 5px;\r\n  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);\r\n}\r\n\r\n.project {\r\n  overflow-y: scroll;\r\n  display: grid;\r\n  // background-color: #a8a8a8b7;\r\n  width: 100%;\r\n  height: 92%;\r\n  padding: 0.75rem;\r\n  // gap: 1rem;\r\n  row-gap: 1rem;\r\n  // grid-template-rows: 60px;\r\n  scrollbar-color: rgb(153, 142, 167) rgb(223, 214, 231);\r\n  scrollbar-width: thin;\r\n  grid-auto-rows: max-content;\r\n}\r\n\r\n.task {\r\n  background-color: rgb(143, 131, 145);\r\n  padding: 10px;\r\n  height: fit-content;\r\n  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);\r\n  cursor: pointer;\r\n}\r\n\r\n.task > task-delete-button:hover {\r\n  background-color: gray;\r\n}\r\n\r\n.task-completed {\r\n  background-color: #337c34;\r\n}\r\n\r\n.task:hover {\r\n  background-color: rgb(127, 117, 129);;\r\n}\r\n\r\n.task:active {\r\n  background-color: rgb(158, 145, 160);;\r\n}\r\n\r\n.circular-add-button {\r\n  border: none;\r\n  overflow: hidden;\r\n  text-decoration: none;\r\n  color: inherit;\r\n  background-color: transparent;\r\n  text-align: center;\r\n  cursor: pointer;\r\n  white-space: nowrap;\r\n  float: right;\r\n  font-size: 24px;\r\n  width: 3rem;\r\n  margin-left: auto;\r\n}\r\n\r\n.circular-add-button:hover {\r\n  background-color: gray;\r\n}\r\n\r\n.circular-add-button:active {\r\n  background-color: rgb(223, 223, 223);\r\n}\r\n\r\n.project-title {\r\n  display: flex;\r\n  background: transparent;\r\n  border: none;\r\n  box-shadow: none;\r\n  font-size: larger;\r\n  font-style: normal;\r\n  vertical-align: middle;\r\n  text-align: center;\r\n  margin: auto;\r\n  width: 100%;\r\n  // font-family: \"Roboto\", sans-serif;\r\n  box-sizing: border-box;\r\n  justify-content: center;\r\n  font-family: 'Courier New', Courier, monospace;\r\n}\r\n\r\n.project-title:focus {\r\n  cursor: text;\r\n}\r\n\r\n.project-header {\r\n  display: flex;\r\n  justify-content: center;\r\n  align-content: center;\r\n  background-color: rgb(135, 133, 153);\r\n  height: 8%;\r\n  padding: 10px;\r\n}\r\n\r\n.button-housing {\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  vertical-align: middle;\r\n}\r\n\r\n.project-dropdown-menu {\r\n  display: inline-flex;\r\n  justify-content: center;\r\n  vertical-align: middle;\r\n  font-size: larger;\r\n  background-color: transparent;\r\n  border: none;\r\n  align-items: center;\r\n  padding: 0;\r\n  line-height: 20px;\r\n  height: 40px;\r\n  width: 40px;\r\n  cursor: pointer;\r\n}\r\n\r\n.project-dropdown-menu:hover {\r\n  background-color: gray;\r\n}\r\n\r\n.project-dropdown-menu:active {\r\n  background-color: rgb(153, 153, 153);\r\n}\r\n\r\n.project-dropdown-menu:focus {\r\n  background-color: rgb(153, 153, 153);\r\n}\r\n\r\n.dropdown {\r\n  position: flex;\r\n  display: flex;\r\n}\r\n\r\n.dropdown-content {\r\n  display: none;\r\n  position: absolute;\r\n  top: 65px;\r\n  background-color: #f9f9f9;\r\n  min-width: 160px;\r\n  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);\r\n  z-index: 1;\r\n  cursor: pointer;\r\n}\r\n\r\n.dropdown-content-block {\r\n  display: block;\r\n}\r\n\r\n.dropdown-content a {\r\n  color: black;\r\n  padding: 12px 16px;\r\n  text-decoration: none;\r\n  display: block;\r\n}\r\n\r\n.dropdown-content a:hover {\r\n  background-color: #f1f1f1;\r\n}\r\n\r\n.dropdown:hover .dropbtn {\r\n  background-color: #3e8e41;\r\n}\r\n\r\n.show {\r\n  display: block;\r\n}\r\n\r\n.task-description {\r\n  -webkit-user-select: none;\r\n  /* Safari */\r\n  -moz-user-select: none;\r\n  /* Firefox */\r\n  -ms-user-select: none;\r\n  /* IE10+/Edge */\r\n  user-select: none;\r\n  /* Standard */\r\n}\r\n\r\n.modal {\r\n  z-index: 3;\r\n  display: none;\r\n  padding-top: 100px;\r\n  position: fixed;\r\n  left: 0;\r\n  top: 0;\r\n  width: 100%;\r\n  height: 100%;\r\n  overflow: auto;\r\n  background-color: rgb(0, 0, 0);\r\n  background-color: rgba(0, 0, 0, 0.4);\r\n}\r\n\r\n.modal-content {\r\n  margin: auto;\r\n  background-color: rgb(179, 179, 179);\r\n  position: relative;\r\n  justify-content: center;\r\n  flex-wrap: nowrap;\r\n  padding: 0;\r\n  outline: 0;\r\n  width: 600px;\r\n  padding: 20px;\r\n}\r\n\r\n.close-x-button {\r\n  display: flex;\r\n  justify-content: right;\r\n  margin-right: 4px;\r\n  cursor: pointer;\r\n}\r\n\r\n.task-form {\r\n  width: 100%;\r\n  justify-content: center;\r\n}\r\n\r\n.form-input {\r\n  width: 100%;\r\n  justify-content: center;\r\n  align-items: center;\r\n}\r\n\r\n.button-div {\r\n  display: flex;\r\n  position: relative;\r\n  justify-content: center;\r\n  align-items: center;\r\n  padding: 5px;\r\n  padding-top: 10px;\r\n}\r\n\r\n.form-button {\r\n  border: none;\r\n  color: white;\r\n  padding: 15px 32px;\r\n  text-align: center;\r\n  text-decoration: none;\r\n  display: inline-block;\r\n  font-size: 16px;\r\n  margin-right: 10px;\r\n  cursor: pointer;\r\n}\r\n\r\n#task-form-submit {\r\n  background-color: #3e8e41;\r\n}\r\n\r\n#task-form-cancel {\r\n  background-color: rgb(156, 60, 60);\r\n}\r\n\r\n.form-input-label {\r\n  padding-right: 5px;\r\n}\r\n\r\nselect {\r\n  display: flex;\r\n  justify-content: center;\r\n  margin: auto;\r\n  margin-bottom: 10px;\r\n  align-self: center;\r\n  resize: none;\r\n  width: 100%;\r\n  padding: 5px;\r\n}\r\n\r\n.input-form {\r\n  display: flex;\r\n  justify-content: center;\r\n  margin: auto;\r\n  margin-bottom: 10px;\r\n  align-self: center;\r\n  resize: none;\r\n  width: 100%;\r\n  padding: 5px;\r\n}\r\n\r\n.task-delete-div {\r\n  display: flex;\r\n  justify-content: right;\r\n}\r\n\r\n.task-delete-button {\r\n  background-color: #c0392b;\r\n  border: solid 2px #c0392b;\r\n  border-radius: 4px;\r\n  text-align: center;\r\n  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);\r\n  font-size: 15px;\r\n  cursor: pointer;\r\n}\r\n\r\n.task-delete-button:hover {\r\n  background-color: #da4332;\r\n  border: solid 2px #da4332;\r\n}\r\n\r\n.task-delete-button:active {\r\n  background-color: #c0392b;\r\n  border: solid 2px #c0392b;\r\n}\r\n\r\n#add-project{\r\n  font-size: medium;\r\n  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);\r\n  background-color: rgb(166, 171, 209);\r\n  border: 3px solid rgb(166, 171, 209);\r\n  border-radius: 3px;\r\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1307,16 +1335,6 @@ module.exports = styleTagTransform;
 
 module.exports = __webpack_require__.p + "background.jpg";
 
-/***/ }),
-
-/***/ "./src/assets/unga.jpg":
-/*!*****************************!*\
-  !*** ./src/assets/unga.jpg ***!
-  \*****************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-module.exports = __webpack_require__.p + "unga.jpg";
-
 /***/ })
 
 /******/ 	});
@@ -1461,4 +1479,4 @@ module.exports = __webpack_require__.p + "unga.jpg";
 /******/ 	
 /******/ })()
 ;
-//# sourceMappingURL=bundlea3a7f3f81702583537a5.js.map
+//# sourceMappingURL=bundle1f24c8a2c526b9caca17.js.map

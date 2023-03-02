@@ -3,17 +3,28 @@ import { renameProjectModal } from "./projectCard";
 import { refreshProjectLayout, unserialize } from "./utilityFunctions";
 import displayProjectWithTasks from "..";
 
-const addProjectButton = document.getElementById("add-project");
+function createAddProjectButton() {
+  let plusIcon = document.createElement("i");
+  plusIcon.className = "fa fa-plus";
+  let addProjectButton = document.createElement("button");
+  addProjectButton.id = "add-project";
+  addProjectButton.appendChild(plusIcon);
+  addProjectButton.innerHTML = "Add Project";
+  document.getElementById("add-project-div").appendChild(addProjectButton);
+  addProjectButton.addEventListener("click", addProjectButtonListener);
+}
 
-addProjectButton.addEventListener("click", () => {
+function addProjectButtonListener() {
+  console.log("Test");
   createProjectModal();
   document.getElementById("modal-title").innerHTML = "Add Project";
   document.getElementById("id01").style.display = "block";
-});
+}
 
 function createProjectModal() {
   console.log("click");
   let taskForm = renameProjectModal();
+  document.getElementById("title").innerHTML = "";
   taskForm.addEventListener("submit", (e) => {
     createProjectListener(e);
     refreshProjectLayout();
@@ -37,4 +48,4 @@ function createProjectListener(e) {
   localStorage.setItem("projects", JSON.stringify(arrayOfProjects));
 }
 
-export default createProjectModal;
+export { createProjectModal, createAddProjectButton };
