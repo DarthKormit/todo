@@ -1,3 +1,4 @@
+import { Project } from "../classes/project";
 import { createProjectCard, createTaskCard } from "./projectCard";
 
 function serialize(obj) {
@@ -17,7 +18,18 @@ function refreshProjectLayout() {
   projectLayout.replaceChildren();
 }
 
+function createInitialLocalStorage() {
+  if (localStorage.getItem("projects") === null) {
+    let arrayOfDisplayProjects = [];
+    localStorage.setItem("projects", arrayOfDisplayProjects);
+    let initialProject = new Project("New Project");
+    arrayOfDisplayProjects.push(initialProject);
+    localStorage.setItem("projects", JSON.stringify(arrayOfDisplayProjects));
+  }
+}
+
 function displayProjectWithTasks() {
+  createInitialLocalStorage();
   const projectLayout = document.getElementById("project-layout");
   let arrayOfDisplayProjects = JSON.parse(localStorage.getItem("projects"));
   arrayOfDisplayProjects.forEach((element, index) => {
