@@ -24,9 +24,12 @@ function createTaskCardModal(
   let closebuttoncontainer = document.createElement("header");
   closebuttoncontainer.className = "w3-container w3-teal";
   let closebutton = document.createElement("span");
+  let closeButtonText = document.createElement("p");
+  closeButtonText.innerHTML = "&times;"
+  closeButtonText.id = "close-x-button-text"
   closebutton.className = "close-x-button";
-  closebutton.innerHTML = "&times;";
-  closebutton.addEventListener("click", () => {
+  // closebutton.innerHTML = "&times;";
+  closeButtonText.addEventListener("click", () => {
     modal.remove();
   });
   let modaltitleheader = document.createElement("h2");
@@ -149,6 +152,7 @@ function createTaskCardModal(
 
   modal.appendChild(modalcontent);
   modalcontent.appendChild(closebuttoncontainer);
+  closebutton.appendChild(closeButtonText);
   closebuttoncontainer.appendChild(closebutton);
   closebuttoncontainer.appendChild(modaltitleheader);
   modalcontent.appendChild(taskForm);
