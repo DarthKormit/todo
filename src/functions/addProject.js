@@ -18,14 +18,12 @@ function createAddProjectButton() {
 }
 
 function addProjectButtonListener() {
-  console.log("Test");
   createProjectModal();
   document.getElementById("modal-title").innerHTML = "Add Project";
   document.getElementById("id01").style.display = "block";
 }
 
 function createProjectModal() {
-  console.log("click");
   let taskForm = renameProjectModal();
   document.getElementById("title").innerHTML = "";
   taskForm.addEventListener("submit", (e) => {
@@ -42,12 +40,10 @@ function createProjectListener(e) {
   const formData = new FormData(e.target);
   const obj = Object.fromEntries(formData);
   const newProject = new Project(obj.name);
-  console.log(JSON.parse(JSON.stringify(arrayOfProjects)));
   arrayOfProjects.forEach((element, index) => {
     arrayOfProjects[index] = unserialize(element, Project);
   });
   arrayOfProjects.push(newProject);
-  console.log(JSON.parse(JSON.stringify(arrayOfProjects)));
   localStorage.setItem("projects", JSON.stringify(arrayOfProjects));
 }
 

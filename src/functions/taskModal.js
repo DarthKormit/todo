@@ -8,12 +8,6 @@ function createTaskCardModal(
   taskIndex,
   projectIndex
 ) {
-  console.log(name);
-  console.log(desc);
-  console.log(sDate);
-  console.log(dDate);
-  console.log(prio);
-  console.log(completed);
 
   let modal = document.createElement("div");
   modal.id = "id01";
@@ -49,8 +43,6 @@ function createTaskCardModal(
   textareaTitle.className = "input-form";
   textareaTitle.name = "name";
   textareaTitle.innerHTML = name;
-
-  console.log(desc);
 
   let labelDescription = document.createElement("label");
   labelDescription.className = "form-input-label";
@@ -173,7 +165,7 @@ function createTaskCardModal(
   buttonDiv.appendChild(cancelButton);
 
   document.getElementById("modal-content-container").appendChild(modal);
-  console.log(taskForm.childNodes[0].childNodes[1]);
+  (taskForm.childNodes[0].childNodes[1]);
 
   return taskForm;
 }
@@ -185,16 +177,14 @@ function selectedOptionPriority(
   option3,
   option4
 ) {
-  console.log("Gone Through");
-  console.log(storedOption);
+  ("Gone Through");
+  (storedOption);
   switch (storedOption) {
     case "n/a" || "yes":
       option1.selected = "true";
-      console.log("dumb");
       break;
     case "high" || "no":
       option2.selected = "selected";
-      console.log("dumber");
       break;
     case "medium":
       option3.selected = "selected";

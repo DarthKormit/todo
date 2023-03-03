@@ -22,13 +22,11 @@ function dropdownDisplay(dropdownContent) {
   dropdownHideAll();
   let xStyle = getComputedStyle(dropdownContent);
   let x = dropdownContent;
-  console.log(xStyle.display);
   if (xStyle.display === "block") {
     x.classList.remove("dropdown-content-block");
   } else {
     x.classList.add("dropdown-content-block");
   }
-  console.log(xStyle.display);
 }
 
 function displayAddTaskCardModal(addIndex) {
@@ -77,7 +75,6 @@ function createTaskCard(
 ) {
   let arrayIndex = taskIndex;
   let taskProjectIndex = projectIndex;
-  console.log(taskProjectIndex);
   let taskCard = document.createElement("div");
   taskCard.id = "task1";
   taskCard.className = "task";
@@ -110,7 +107,7 @@ function createTaskCard(
   });
 
   taskCard.addEventListener("click", () => {
-    console.log("Index: " + arrayIndex);
+    ("Index: " + arrayIndex);
     taskCardDisplayModal(
       name,
       desc,
