@@ -30,10 +30,6 @@ class Project {
   removeTask() {
     this.tasks.slice();
   }
-
-  deserialize(){
-
-  }
 }
 
 class Task {
@@ -65,15 +61,4 @@ class Task {
   }
 }
 
-let newTask = new Task(
-  "Swapnil",
-  "Dumb",
-  "20/04/1999",
-  "20/04/2070",
-  false,
-  "Medium"
-);
-
-export {Task, Project};
-
-newTask.setName("dumb");
+export { Task, Project };

@@ -1,7 +1,10 @@
 import { Project } from "../classes/project";
 import { renameProjectModal } from "./projectCard";
-import { refreshProjectLayout, unserialize } from "./utilityFunctions";
-import displayProjectWithTasks from "..";
+import {
+  refreshProjectLayout,
+  unserialize,
+  displayProjectWithTasks,
+} from "./utilityFunctions";
 
 function createAddProjectButton() {
   let plusIcon = document.createElement("i");

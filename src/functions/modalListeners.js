@@ -1,7 +1,10 @@
 import { createTaskCardModal } from "./taskModal";
-import displayProjectWithTasks from "..";
 import { Project, Task } from "../classes/project";
-import { refreshProjectLayout, unserialize } from "./utilityFunctions";
+import {
+  refreshProjectLayout,
+  unserialize,
+  displayProjectWithTasks,
+} from "./utilityFunctions";
 import { renameProjectModal } from "./projectCard";
 
 function addTaskListener(e, indexofProject) {
@@ -28,8 +31,6 @@ function addTaskListener(e, indexofProject) {
   console.log(JSON.parse(JSON.stringify(arrayOfProjects)));
   localStorage.setItem("projects", JSON.stringify(arrayOfProjects));
 }
-
-//replace task at index on project task array
 
 function editTaskListener(e, indexofTask, projectIndex) {
   e.preventDefault();
@@ -60,11 +61,14 @@ function deleteProjectModal(projectIndex) {
   let taskForm = renameProjectModal();
   document.getElementById("label-title").remove();
   document.getElementById("title").remove();
-  document.getElementById("modal-title").innerHTML = "Are you sure you want to delete this Project?";
-  document.getElementById("task-form-submit").innerHTML = "Yes"
-  document.getElementById("task-form-submit").style.backgroundColor = "rgb(156, 60, 60)";
-  document.getElementById("task-form-cancel").innerHTML = "No"
-  document.getElementById("task-form-cancel").style.backgroundColor = "rgb(190, 190, 190)";
+  document.getElementById("modal-title").innerHTML =
+    "Are you sure you want to delete this Project?";
+  document.getElementById("task-form-submit").innerHTML = "Yes";
+  document.getElementById("task-form-submit").style.backgroundColor =
+    "rgb(156, 60, 60)";
+  document.getElementById("task-form-cancel").innerHTML = "No";
+  document.getElementById("task-form-cancel").style.backgroundColor =
+    "rgb(190, 190, 190)";
   taskForm.addEventListener("submit", (e) => {
     deleteProjectListener(e, projectIndex);
     refreshProjectLayout();
@@ -129,11 +133,14 @@ function deleteTaskModal(taskIndex, projectIndex) {
   let taskForm = renameProjectModal();
   document.getElementById("label-title").remove();
   document.getElementById("title").remove();
-  document.getElementById("modal-title").innerHTML = "Are you sure you want to delete this Task?";
-  document.getElementById("task-form-submit").innerHTML = "Yes"
-  document.getElementById("task-form-submit").style.backgroundColor = "rgb(156, 60, 60)";
-  document.getElementById("task-form-cancel").innerHTML = "No"
-  document.getElementById("task-form-cancel").style.backgroundColor = "rgb(190, 190, 190)";
+  document.getElementById("modal-title").innerHTML =
+    "Are you sure you want to delete this Task?";
+  document.getElementById("task-form-submit").innerHTML = "Yes";
+  document.getElementById("task-form-submit").style.backgroundColor =
+    "rgb(156, 60, 60)";
+  document.getElementById("task-form-cancel").innerHTML = "No";
+  document.getElementById("task-form-cancel").style.backgroundColor =
+    "rgb(190, 190, 190)";
   taskForm.addEventListener("submit", (e) => {
     deleteTaskListener(e, taskIndex, projectIndex);
     refreshProjectLayout();
@@ -182,4 +189,10 @@ function editProjectListener(e, indexofProject) {
   localStorage.setItem("projects", JSON.stringify(arrayOfProjects));
 }
 
-export { addTaskModal, editTaskModal, editProjectModal, deleteProjectModal, deleteTaskModal };
+export {
+  addTaskModal,
+  editTaskModal,
+  editProjectModal,
+  deleteProjectModal,
+  deleteTaskModal,
+};

@@ -1,4 +1,10 @@
-import { addTaskModal, editProjectModal, editTaskModal, deleteProjectModal, deleteTaskModal } from "./modalListeners";
+import {
+  addTaskModal,
+  editProjectModal,
+  editTaskModal,
+  deleteProjectModal,
+  deleteTaskModal,
+} from "./modalListeners";
 
 function dropdownHideAll() {
   let dropdowns = document.getElementsByClassName("dropdown-content");
@@ -31,8 +37,26 @@ function displayAddTaskCardModal(addIndex) {
   document.getElementById("id01").style.display = "block";
 }
 
-function taskCardDisplayModal(name, desc, sDate, dDate, prio, completed, arrayIndex, taskProjectIndex) {
-  editTaskModal(name, desc, sDate, dDate, prio, completed, arrayIndex, taskProjectIndex);
+function taskCardDisplayModal(
+  name,
+  desc,
+  sDate,
+  dDate,
+  prio,
+  completed,
+  arrayIndex,
+  taskProjectIndex
+) {
+  editTaskModal(
+    name,
+    desc,
+    sDate,
+    dDate,
+    prio,
+    completed,
+    arrayIndex,
+    taskProjectIndex
+  );
   document.getElementById("id01").style.display = "block";
 }
 
@@ -41,7 +65,16 @@ function taskDeleteModalDisplay(arrayIndex, taskProjectIndex) {
   document.getElementById("id01").style.display = "block";
 }
 
-function createTaskCard(name, desc, sDate, dDate, prio, completed, taskIndex, projectIndex) {
+function createTaskCard(
+  name,
+  desc,
+  sDate,
+  dDate,
+  prio,
+  completed,
+  taskIndex,
+  projectIndex
+) {
   let arrayIndex = taskIndex;
   let taskProjectIndex = projectIndex;
   console.log(taskProjectIndex);
@@ -68,18 +101,26 @@ function createTaskCard(name, desc, sDate, dDate, prio, completed, taskIndex, pr
 
   taskCardDeleteDiv.appendChild(taskCardDeleteButton);
 
-  
   taskCard.appendChild(taskCardPTag);
   taskCard.appendChild(taskCardDeleteDiv);
 
-  taskCardDeleteButton.addEventListener("click", (e)=>{
+  taskCardDeleteButton.addEventListener("click", (e) => {
     e.stopImmediatePropagation();
     taskDeleteModalDisplay(taskIndex, taskProjectIndex);
-  })
+  });
 
   taskCard.addEventListener("click", () => {
     console.log("Index: " + arrayIndex);
-    taskCardDisplayModal(name, desc, sDate, dDate, prio, completed, arrayIndex, taskProjectIndex);
+    taskCardDisplayModal(
+      name,
+      desc,
+      sDate,
+      dDate,
+      prio,
+      completed,
+      arrayIndex,
+      taskProjectIndex
+    );
   });
 
   return taskCard;
@@ -103,14 +144,14 @@ function createProjectDropdown(projectIndex, projectTitle) {
 
   let projectCardDropdownLinkRename = document.createElement("a");
   projectCardDropdownLinkRename.innerHTML = "Rename";
-  projectCardDropdownLinkRename.addEventListener("click", () =>{
+  projectCardDropdownLinkRename.addEventListener("click", () => {
     editProjectModal(projectIndex, projectTitle);
     document.getElementById("id01").style.display = "block";
   });
 
   let projectCardDropdownLinkDelete = document.createElement("a");
   projectCardDropdownLinkDelete.innerHTML = "Delete Project";
-  projectCardDropdownLinkDelete.addEventListener("click", () =>{
+  projectCardDropdownLinkDelete.addEventListener("click", () => {
     deleteProjectModal(projectIndex);
     document.getElementById("id01").style.display = "block";
   });
@@ -123,7 +164,7 @@ function createProjectDropdown(projectIndex, projectTitle) {
   projectCardDropdown.appendChild(projectCardDropdownHousing);
 
   projectCardDropdownButton.addEventListener("click", () =>
-  dropdownDisplay(projectCardDropdownContent)
+    dropdownDisplay(projectCardDropdownContent)
   );
 
   return projectCardDropdown;
@@ -153,7 +194,9 @@ function createProjectCard(projectTitle, projectIndex) {
   projectTaskContainer.id = "project1";
 
   projectCardHeader.appendChild(projectCardTitle);
-  projectCardHeader.appendChild(createProjectDropdown(projectIndex, projectTitle));
+  projectCardHeader.appendChild(
+    createProjectDropdown(projectIndex, projectTitle)
+  );
   projectCardHeader.appendChild(projectCardAddButton);
   projectCard.appendChild(projectCardHeader);
 
@@ -172,8 +215,8 @@ function renameProjectModal(projectTitle) {
   closebuttoncontainer.className = "w3-container w3-teal";
   let closebutton = document.createElement("span");
   let closeButtonText = document.createElement("p");
-  closeButtonText.innerHTML = "&times;"
-  closeButtonText.id = "close-x-button-text"
+  closeButtonText.innerHTML = "&times;";
+  closeButtonText.id = "close-x-button-text";
   closebutton.className = "close-x-button";
   closeButtonText.addEventListener("click", () => {
     modal.remove();
@@ -226,10 +269,9 @@ function renameProjectModal(projectTitle) {
   buttonDiv.appendChild(submitButton);
   buttonDiv.appendChild(cancelButton);
 
-  document.getElementById("main-content-container").appendChild(modal);
+  document.getElementById("modal-content-container").appendChild(modal);
 
   return taskForm;
 }
-
 
 export { createProjectCard, createTaskCard, renameProjectModal };

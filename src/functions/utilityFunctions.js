@@ -1,3 +1,5 @@
+import { createProjectCard, createTaskCard } from "./projectCard";
+
 function serialize(obj) {
   var str = JSON.stringify(obj);
   return str;
@@ -15,32 +17,37 @@ function refreshProjectLayout() {
   projectLayout.replaceChildren();
 }
 
-// function displayProjectWithTasks() {
-//   let arrayOfDisplayProjects = JSON.parse(localStorage.getItem("projects"));
-//   for (let xindex = 0; xindex < arrayOfDisplayProjects.length; xindex++) {
-//     const projectElement = arrayOfDisplayProjects[xindex];
-//     console.log(projectIndex);
-//     let newProjectCard = createProjectCard(projectElement.name, projectIndex);
-//     projectLayout.appendChild(newProjectCard);
+function displayProjectWithTasks() {
+  const projectLayout = document.getElementById("project-layout");
+  let arrayOfDisplayProjects = JSON.parse(localStorage.getItem("projects"));
+  arrayOfDisplayProjects.forEach((element, index) => {
+    let projectIndex = index;
+    console.log(projectIndex);
+    let newProjectCard = createProjectCard(element.name, projectIndex);
+    projectLayout.appendChild(newProjectCard);
+    element.tasks.forEach((element, index) => {
+      console.log(element.name);
+      console.log(index);
+      console.log(projectIndex);
+      newProjectCard.childNodes[1].appendChild(
+        createTaskCard(
+          element.name,
+          element.description,
+          element.startDate,
+          element.dueDate,
+          element.priority,
+          element.completed,
+          index,
+          projectIndex
+        )
+      );
+    });
+  });
+}
 
-//     for (let yindex = 0; yindex < projectElement.tasks.length; yindex++) {
-//       const taskElement = projectElement.tasks[yindex];
-//       console.log(taskElement.name);
-//       console.log(yindex);
-//       newProjectCard.childNodes[1].appendChild(
-//         createTaskCard(
-//           element.name,
-//           element.description,
-//           element.startDate,
-//           element.dueDate,
-//           element.priority,
-//           element.completed,
-//           index,
-//           projectIndex
-//         )
-//       );
-//     }
-//   }
-// }
-
-export { serialize, unserialize, refreshProjectLayout };
+export {
+  serialize,
+  unserialize,
+  refreshProjectLayout,
+  displayProjectWithTasks,
+};

@@ -8,7 +8,6 @@ function createTaskCardModal(
   taskIndex,
   projectIndex
 ) {
-
   console.log(name);
   console.log(desc);
   console.log(sDate);
@@ -25,8 +24,8 @@ function createTaskCardModal(
   closebuttoncontainer.className = "w3-container w3-teal";
   let closebutton = document.createElement("span");
   let closeButtonText = document.createElement("p");
-  closeButtonText.innerHTML = "&times;"
-  closeButtonText.id = "close-x-button-text"
+  closeButtonText.innerHTML = "&times;";
+  closeButtonText.id = "close-x-button-text";
   closebutton.className = "close-x-button";
   // closebutton.innerHTML = "&times;";
   closeButtonText.addEventListener("click", () => {
@@ -60,7 +59,7 @@ function createTaskCardModal(
   let textareaDescription = document.createElement("textarea");
   textareaDescription.id = "description";
   textareaDescription.className = "input-form";
-  textareaDescription.name = "description"
+  textareaDescription.name = "description";
   textareaDescription.innerHTML = desc;
 
   let labelStartDate = document.createElement("label");
@@ -173,7 +172,7 @@ function createTaskCardModal(
   buttonDiv.appendChild(submitButton);
   buttonDiv.appendChild(cancelButton);
 
-  document.getElementById("main-content-container").appendChild(modal);
+  document.getElementById("modal-content-container").appendChild(modal);
   console.log(taskForm.childNodes[0].childNodes[1]);
 
   return taskForm;
@@ -189,7 +188,7 @@ function selectedOptionPriority(
   console.log("Gone Through");
   console.log(storedOption);
   switch (storedOption) {
-    case ("n/a" || "yes"):
+    case "n/a" || "yes":
       option1.selected = "true";
       console.log("dumb");
       break;
