@@ -188,7 +188,7 @@ header {
   justify-content: center;
   font-family: 'Courier New', Courier, monospace;
   font-weight:600;
-  word-break: break-all,
+  overflow-wrap: anywhere;
 }
 
 .project-title:focus {
